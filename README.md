@@ -66,6 +66,7 @@ The following tools/scripts are made available in the path:
 
 Also, the following environment variables are available:
 
+* **LAB_DIR** - Directory for your lab
 * **$ZONE** - Zone for the GCP project
 * **$REGION** - Region for the GCP project
 * **$PROJECT** - Name of the GCP project

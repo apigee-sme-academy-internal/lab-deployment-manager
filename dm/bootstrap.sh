@@ -103,7 +103,8 @@ export PATH=~/qwiklabs-hybrid-player/bin:$PATH
 
 echo "*** Cloning lab content repo ***"
 git clone "${LAB_REPO}"
-cd $(basename "${LAB_REPO}" .git)
+export LAB_DIR=$(basename "${LAB_REPO}" .git)
+cd ${LAB_DIR}
 git checkout ${LAB_BRANCH}
 
 echo "*** Running lab startup script ***"
