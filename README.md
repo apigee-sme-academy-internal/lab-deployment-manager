@@ -47,3 +47,25 @@ To use the deployment manager, you have to go on the Qwiklabs UI, and edit your 
 
 In the main lab settings, click on the deployment manager section, and upload the `deployment-manager.zip` file.
 
+
+### Environment
+
+When your lab's `startup.sh` script runs, the deployment manager has already setup a few things in the
+environment to make things easy for you. 
+
+The following tools/scripts are made available in the path:
+
+* **rewind.sh** - for creating an Apigee Hybrid Cluster
+* **git** - for cloning other repos
+* **jq** - for parsing and extracting data from JSON files)
+* **gcloud** - already logged in, full access to the GCP project
+* **node** - v12, for running your own Node.js scripts
+* **kubectl** - for accessing gke clusters
+
+Also, the following environment variables are available:
+
+* **$ZONE** - Zone for the GCP project
+* **$REGION** - Region for the GCP project
+* **$PROJECT** - Name of the GCP project
+* **$QWIKLAB_USER** - Username for the qwiklab student
+* **$QWIKLAB_PASSWORD** - Password for the qwiklab student
