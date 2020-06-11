@@ -40,39 +40,57 @@ export REGION=$REGION
 export QWIKLAB_USER=$QWIKLAB_USER
 export QWIKLAB_PASSWORD=$QWIKLAB_PASSWORD
 export PROJECT=$PROJECT
+export HOME=/root
+
 
 EOF
 # Second section, the rest of the startup (variable expansion is not active)
 cat << 'EOF' >> ./startup.sh
 cd ~
-echo "Installing GCP Logging Agent"
+echo "*** Installing GCP Logging Agent ***"
 curl -sSO https://dl.google.com/cloudagents/add-logging-agent-repo.sh
 bash add-logging-agent-repo.sh
 apt-get update -y
 apt-get install -y google-fluentd google-fluentd-catch-all-config-structured
 service google-fluentd start
 
-echo "Installing kubectl, gcloud"
+echo "*** Installing kubectl, gcloud, jq ***"
 snap install kubectl --classic
 snap install google-cloud-sdk
 snap install jq
 snap install git-ubuntu --classic
 export PATH=/snap/bin:$PATH
 
+
+export NODE_VERSION=v12.18.0
+export NODE_DIR=node-${NODE_VERSION}-linux-x64
+export NODE_TARBALL=${NODE_DIR}.tar.gz
+
+echo "*** Installing Node.js ($NODE_VERSION) ***"
+curl -O https://nodejs.org/dist/${NODE_VERSION}/${NODE_TARBALL}
+tar -xzf ${NODE_TARBALL}
+sudo mv ${NODE_DIR} /opt/${NODE_DIR}
+chmod a+rwx -R /opt/${NODE_DIR}
+export PATH=/opt/${NODE_DIR}/bin:$PATH
+
+echo "*** Setup lab private key ***"
 echo '${LAB_PRIVATE_KEY}' > lab_private_key.pem
 chmod 600 ~/lab_private_key.pem
+export GIT_SSH_COMMAND="ssh -i ~/lab_private_key.pem"
 
-eval "$(ssh-agent -s)"
-ssh-add ~/lab_private_key.pem
 ssh-keyscan github.com >> ~/.ssh/known_hosts
 
-echo "Cloning lab content repo"
+echo "*** Cloning Hybrid player ***"
+git clone git@github.com:apigee-sme-academy-internal/qwiklabs-hybrid-player.git
+export PATH=$(pwd)/qwiklabs-hybrid-player/bin:$PATH
+
+echo "*** Cloning lab content repo ***"
 git clone "${LAB_REPO}"
 cd $(basename "${LAB_REPO}" .git)
 git checkout ${LAB_BRANCH}
 
+echo "*** Running lab startup script ***"
 ./startup.sh
-
 EOF
 
 #Create VM to bootstrap the lab
