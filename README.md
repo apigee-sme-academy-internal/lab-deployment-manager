@@ -61,6 +61,8 @@ The following tools/scripts are made available in the path:
 * **gcloud** - already logged in, full access to the GCP project
 * **node** - v12, for running your own Node.js scripts
 * **kubectl** - for accessing gke clusters
+* **mvn** - v3, for deploying Apigee proxies
+* **java** - v11, for use by maven
 
 Also, the following environment variables are available:
 

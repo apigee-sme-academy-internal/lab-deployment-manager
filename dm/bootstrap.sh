@@ -73,6 +73,23 @@ sudo mv ${NODE_DIR} /opt/${NODE_DIR}
 chmod a+rwx -R /opt/${NODE_DIR}
 export PATH=/opt/${NODE_DIR}/bin:$PATH
 
+echo "*** Installing Java 14 ***"
+curl -O https://download.java.net/java/GA/jdk14/076bab302c7b4508975440c56f6cc26a/36/GPL/openjdk-14_linux-x64_bin.tar.gz
+tar -xzf openjdk-14_linux-x64_bin.tar.gz
+chmod a+rwx -R jdk-14
+sudo mv jdk-14 /opt
+export PATH=/opt/jdk-14/bin:$PATH
+
+export MVN_VERSION=3.6.3
+export MVN_DIR=apache-maven-${MVN_VERSION}
+
+echo "*** Installing Maven 3 ***"
+curl -O http://mirror.cc.columbia.edu/pub/software/apache/maven/maven-3/${MVN_VERSION}/binaries/${MVN_DIR}-bin.tar.gz
+tar -xzf ${MVN_DIR}-bin.tar.gz
+chmod a+rwx -R ${MVN_DIR}
+sudo mv ${MVN_DIR} /opt/
+export PATH=/opt/${MVN_DIR}/bin:$PATH
+
 echo "*** Setup lab private key ***"
 echo '${LAB_PRIVATE_KEY}' > lab_private_key.pem
 chmod 600 ~/lab_private_key.pem
