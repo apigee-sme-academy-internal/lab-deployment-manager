@@ -82,7 +82,7 @@ ssh-keyscan github.com >> ~/.ssh/known_hosts
 
 echo "*** Cloning Hybrid player ***"
 git clone git@github.com:apigee-sme-academy-internal/qwiklabs-hybrid-player.git
-export PATH=$(pwd)/qwiklabs-hybrid-player/bin:$PATH
+export PATH=~/qwiklabs-hybrid-player/bin:$PATH
 
 echo "*** Cloning lab content repo ***"
 git clone "${LAB_REPO}"
