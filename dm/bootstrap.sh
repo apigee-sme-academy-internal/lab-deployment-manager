@@ -112,7 +112,7 @@ echo "*** Running lab startup script ***"
 EOF
 
 #Create VM to bootstrap the lab
-gcloud compute instances create startup \
+gcloud compute instances create lab-startup \
     --machine-type=n1-standard-2 \
     --subnet=default \
     --zone $ZONE \
