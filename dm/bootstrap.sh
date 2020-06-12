@@ -90,6 +90,19 @@ chmod a+rwx -R ${MVN_DIR}
 sudo mv ${MVN_DIR} /opt/
 export PATH=/opt/${MVN_DIR}/bin:$PATH
 
+export DEPLOY_PLUGIN_GROUP=io.apigee.build-tools.enterprise4g
+export DEPLOY_PLUGIN_ID=apigee-edge-maven-plugin
+export DEPLOY_PLUGIN_VERSION=2.0.2-SNAPSHOT
+
+echo "*** Install Custom Apigee Hybrid Deploy Plugin ***"
+curl -O https://storage.googleapis.com/apigee-sme-academy/${DEPLOY_PLUGIN_ID}-${DEPLOY_PLUGIN_VERSION}.jar
+export DEPLOY_PLUGIN_POM=$(jar tf ${DEPLOY_PLUGIN_ID}-${DEPLOY_PLUGIN_VERSION}.jar | grep "pom.xml")
+jar xf ${DEPLOY_PLUGIN_ID}-${DEPLOY_PLUGIN_VERSION}.jar ${DEPLOY_PLUGIN_POM}
+mvn -ntp org.apache.maven.plugins:maven-install-plugin:install-file  \
+   -Dfile=./${DEPLOY_PLUGIN_ID}-${DEPLOY_PLUGIN_VERSION}.jar \
+   -DpomFile=${DEPLOY_PLUGIN_POM} \
+   -Dpackaging=jar
+
 echo "*** Setup lab private key ***"
 echo '${LAB_PRIVATE_KEY}' > lab_private_key.pem
 chmod 600 ~/lab_private_key.pem
