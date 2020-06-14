@@ -35,13 +35,13 @@ export PROJECT=$(gcloud config get-value project)
 # First section, add the env vars (variable expansion is active)
 cat << EOF > ./startup.sh
 #!/usr/bin/env bash
+
 export ZONE=$ZONE
 export REGION=$REGION
 export QWIKLAB_USER=$QWIKLAB_USER
 export QWIKLAB_PASSWORD=$QWIKLAB_PASSWORD
 export PROJECT=$PROJECT
 export HOME=/root
-
 
 EOF
 # Second section, the rest of the startup (variable expansion is not active)
@@ -117,6 +117,19 @@ git clone "${LAB_REPO}"
 export LAB_DIR="$(pwd)/$(basename "${LAB_REPO}" .git)"
 cd ${LAB_DIR}
 git checkout ${LAB_BRANCH}
+
+echo "*** Setup env file ***"
+cat << HEREDOC > ~/env
+export ZONE=$ZONE
+export REGION=$REGION
+export QWIKLAB_USER=$QWIKLAB_USER
+export QWIKLAB_PASSWORD=$QWIKLAB_PASSWORD
+export PROJECT=$PROJECT
+export HOME=$HOME
+export LAB_DIR=$LAB_DIR
+export GIT_SSH_COMMAND=$GIT_SSH_COMMAND
+export PATH=$PATH
+HEREDOC
 
 echo "*** Running lab startup script ***"
 ./startup.sh
