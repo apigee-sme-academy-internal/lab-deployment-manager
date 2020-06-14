@@ -37,6 +37,41 @@ e.g.
 
 If you do not provide a private key, then an ephemeral key gets generated during the build process.
 
+## Building Deployment Manager for Apigee SME Academy labs
+
+The Apigee SME Academy labs are hosted in an internal git repo. While there is no sensitive
+data stored in any of the repos, we do not want to publicly expose the assets there. However,
+these assets need to be available to the Qwiklabs automation. 
+
+In order to bridge this gap, we created a bot/automation account in Github. 
+This account is [apigeesmeacademy-automation](https://github.com/apigeesmeacademy-automation).
+This user account has been added to each of the labs with `read-only` access.
+
+When the deployment manager runs inside a Qwiklabs project, it will try to clone your lab's repo. 
+This is where the automation account comes in. For the deployment manager to be able to clone the repo,
+you must build the `deployment-manager.zip` file using the private key for the automation user. To do this, follow the examples below:
+
+* Login to GCP using gcloud
+```shell script
+gcloud auth login
+```
+
+* Set the Apigee SME Academy Project
+```shell script
+gcloud config set project apigee-sme-academy
+```
+
+* Download the private key for the automation user
+```shell script
+gcloud secrets versions access latest --secret=automation-deploy-key > ~/deployment.pem
+```
+
+* Finally, build the deployment manager zip file
+```shell script
+./build.sh git@github.com:apigee-sme-academy-internal/app-modernization-lab-2.git master ~/deployment.pem
+```
+
+
 ### How to use it
 
 To use the deployment manager, you have to go on the Qwiklabs UI, and edit your lab.
@@ -72,3 +107,5 @@ Also, the following environment variables are available:
 * **$PROJECT** - Name of the GCP project
 * **$QWIKLAB_USER** - Username for the qwiklab student
 * **$QWIKLAB_PASSWORD** - Password for the qwiklab student
+
+
