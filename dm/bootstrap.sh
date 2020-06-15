@@ -99,7 +99,10 @@ ssh-keyscan github.com >> ~/.ssh/known_hosts
 
 echo "*** Cloning Hybrid player ***"
 git clone git@github.com:apigee-sme-academy-internal/qwiklabs-hybrid-player.git
+pushd qwiklabs-hybrid-player
+git checkout master
 export PATH=~/qwiklabs-hybrid-player/bin:$PATH
+popd
 
 echo "*** Cloning lab content repo ***"
 git clone "${LAB_REPO}"
@@ -109,15 +112,15 @@ git checkout ${LAB_BRANCH}
 
 echo "*** Setup env file ***"
 cat << HEREDOC > ~/env
-export ZONE=$ZONE
-export REGION=$REGION
-export QWIKLAB_USER=$QWIKLAB_USER
-export QWIKLAB_PASSWORD=$QWIKLAB_PASSWORD
-export PROJECT=$PROJECT
-export HOME=$HOME
-export LAB_DIR=$LAB_DIR
-export GIT_SSH_COMMAND=$GIT_SSH_COMMAND
-export PATH=$PATH
+export ZONE="$ZONE"
+export REGION="$REGION"
+export QWIKLAB_USER="$QWIKLAB_USER"
+export QWIKLAB_PASSWORD="$QWIKLAB_PASSWORD"
+export PROJECT="$PROJECT"
+export HOME="$HOME"
+export LAB_DIR="$LAB_DIR"
+export GIT_SSH_COMMAND="$GIT_SSH_COMMAND"
+export PATH="$PATH"
 HEREDOC
 
 echo "*** Running lab startup script ***"
