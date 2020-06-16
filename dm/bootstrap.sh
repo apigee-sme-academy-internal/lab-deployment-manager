@@ -36,12 +36,13 @@ export PROJECT=$(gcloud config get-value project)
 cat << EOF > ./startup.sh
 #!/usr/bin/env bash
 
-export ZONE=$ZONE
-export REGION=$REGION
-export QWIKLAB_USER=$QWIKLAB_USER
-export QWIKLAB_PASSWORD=$QWIKLAB_PASSWORD
-export PROJECT=$PROJECT
+export ZONE="$ZONE"
+export REGION="$REGION"
+export QWIKLAB_USER="$QWIKLAB_USER"
+export QWIKLAB_PASSWORD="$QWIKLAB_PASSWORD"
+export PROJECT="$PROJECT"
 export HOME=/root
+export SERVICE_ACCOUNT_JSON='${KEY_FILE}'
 
 EOF
 # Second section, the rest of the startup (variable expansion is not active)
@@ -121,6 +122,7 @@ export HOME="$HOME"
 export LAB_DIR="$LAB_DIR"
 export GIT_SSH_COMMAND="$GIT_SSH_COMMAND"
 export PATH="$PATH"
+export SERVICE_ACCOUNT_JSON='$SERVICE_ACCOUNT_JSON'
 HEREDOC
 
 echo "*** Running lab startup script ***"

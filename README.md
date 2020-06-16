@@ -101,11 +101,13 @@ The following tools/scripts are made available in the path:
 
 Also, the following environment variables are available:
 
-* **LAB_DIR** - Directory for your lab
+* **$LAB_DIR** - Directory for your lab
 * **$ZONE** - Zone for the GCP project
 * **$REGION** - Region for the GCP project
 * **$PROJECT** - Name of the GCP project
 * **$QWIKLAB_USER** - Username for the qwiklab student
 * **$QWIKLAB_PASSWORD** - Password for the qwiklab student
+* **$SERVICE_ACCOUNT_JSON** - JSON string for the Qwiklab user service account
+
 
 
