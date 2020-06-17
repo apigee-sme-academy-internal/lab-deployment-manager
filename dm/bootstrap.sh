@@ -123,6 +123,17 @@ export LAB_DIR="$LAB_DIR"
 export GIT_SSH_COMMAND="$GIT_SSH_COMMAND"
 export PATH="$PATH"
 export SERVICE_ACCOUNT_JSON='$SERVICE_ACCOUNT_JSON'
+
+function wait_for_service_ip() {
+  service_ip="null"
+  service_name=\$1
+  while [ -z "\$service_ip" ] || [ "\$service_ip" == "null" ]; do
+    echo "Waiting for \${service_name} IP address ...";
+    service_ip=\$(kubectl get service \${service_name} -o json | jq ".status.loadBalancer.ingress[0].ip" -r);
+    [ -z "\$service_ip" ] || [ "\$service_ip" == "null" ] && sleep 10;
+  done;
+}
+
 HEREDOC
 
 echo "*** Running lab startup script ***"
