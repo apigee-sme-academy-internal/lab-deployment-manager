@@ -3,6 +3,7 @@
 export LAB_REPO="$1"
 export LAB_BRANCH="$2"
 export LAB_PRIVATE_KEY_FILE="$3"
+export LAB_ZIP_FILE=${4:-deployment-manager.zip}
 
 if [[ -z "$LAB_REPO" ]] ; then
   echo "error: LAB_REPO url is required"
@@ -14,7 +15,7 @@ if [[ -z "$LAB_BRANCH" ]] ; then
   exit 1
 fi
 
-rm -rf ./build/dm ./build/deployment-manager.zip
+rm -rf ./build/dm ./build/${LAB_ZIP_FILE}
 cp -r dm ./build/dm
 
 if [[ -f "$LAB_PRIVATE_KEY_FILE" ]] ; then
@@ -30,5 +31,5 @@ export ASSETS_SERVICE_ACCOUNT_JSON=$(gcloud secrets versions access --secret=aut
 envsubst '${LAB_REPO},${LAB_BRANCH},${LAB_PRIVATE_KEY},${ASSETS_SERVICE_ACCOUNT_JSON}' < ./build/dm/bootstrap.sh > ./build/dm/bootstrap.sh.temp
 mv ./build/dm/bootstrap.sh.temp ./build/dm/bootstrap.sh
 
-zip -j build/deployment-manager.zip ./build/dm/*
+zip -j build/${LAB_ZIP_FILE} ./build/dm/*
 
