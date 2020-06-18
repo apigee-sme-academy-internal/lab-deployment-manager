@@ -108,6 +108,7 @@ Also, the following environment variables are available:
 * **$QWIKLAB_USER** - Username for the qwiklab student
 * **$QWIKLAB_PASSWORD** - Password for the qwiklab student
 * **$SERVICE_ACCOUNT_JSON** - JSON string for the Qwiklab user service account
+* **$ASSETS_SERVICE_ACCOUNT_JSON** - JSON string for the SME Academy automation user service account 
 
 
 

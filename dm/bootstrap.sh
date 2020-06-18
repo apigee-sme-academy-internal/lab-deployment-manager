@@ -96,6 +96,9 @@ echo '${LAB_PRIVATE_KEY}' > lab_private_key.pem
 chmod 600 ~/lab_private_key.pem
 export GIT_SSH_COMMAND="ssh -i ~/lab_private_key.pem"
 
+echo "*** Setup Assets service account ***"
+export ASSETS_SERVICE_ACCOUNT_JSON='${ASSETS_SERVICE_ACCOUNT_JSON}'
+
 ssh-keyscan github.com >> ~/.ssh/known_hosts
 
 echo "*** Cloning Hybrid player ***"
@@ -123,6 +126,7 @@ export LAB_DIR="$LAB_DIR"
 export GIT_SSH_COMMAND="$GIT_SSH_COMMAND"
 export PATH="$PATH"
 export SERVICE_ACCOUNT_JSON='$SERVICE_ACCOUNT_JSON'
+export ASSETS_SERVICE_ACCOUNT_JSON='$ASSETS_SERVICE_ACCOUNT_JSON'
 
 function wait_for_service_ip() {
   service_ip="null"
