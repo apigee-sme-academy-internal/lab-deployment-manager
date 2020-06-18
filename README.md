@@ -99,7 +99,7 @@ The following tools/scripts are made available in the path:
 * **mvn** - v3, for deploying Apigee proxies
 * **java** - v11, for use by maven
 
-Also, the following environment variables are available:
+The following environment variables are available:
 
 * **$LAB_DIR** - Directory for your lab
 * **$ZONE** - Zone for the GCP project
@@ -109,6 +109,19 @@ Also, the following environment variables are available:
 * **$QWIKLAB_PASSWORD** - Password for the qwiklab student
 * **$SERVICE_ACCOUNT_JSON** - JSON string for the Qwiklab user service account
 * **$ASSETS_SERVICE_ACCOUNT_JSON** - JSON string for the SME Academy automation user service account 
+
+Also, the deployment manager creates a storage with the same name as the project.
+The bucket is publicly accessible by everyone. The idea is that, as part
+of your lab, if there are any assets that the student needs, you should be able to do
+this in your lab's startup script:
+
+```shell script
+source ~/env
+# Upload the assets directory
+gsutil -m cp -R assets gs://${PROJECT}
+```
+
+That way in your lab instructions, you can point the student to the assets in the bucket.
 
 
 
