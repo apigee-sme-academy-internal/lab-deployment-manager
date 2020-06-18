@@ -185,6 +185,13 @@ function wait_for_service_ip() {
   done;
 }
 
+function get_service_ip_and_port() {
+  service_name=\$1
+  service_ip=\$(kubectl get service \${service_name} -o json | jq ".status.loadBalancer.ingress[0].ip" -r)
+  service_port=\$(kubectl get service \${service_name} -o json | jq ".spec.ports[0].port" -r)
+  echo "\${service_ip}:\${service_port}"
+}
+
 HEREDOC
 
 echo "*** Running lab startup script ***"
