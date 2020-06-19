@@ -177,7 +177,11 @@ echo "Requesting new certificate ..."
 
 export RUNTIME_HOST_ALIAS="api.$PROJECT.apigeelabs.com"
 export MART_HOST_ALIAS="mart.$PROJECT.apigeelabs.com"
-export PORTAL_HOST_ALIAS="developer.$PROJECT.apigeelabs.com"
+export DEV_PORTAL_HOST_ALIAS="developer.$PROJECT.apigeelabs.com"
+export REST_SERVICE_HOST_ALIAS="rest.$PROJECT.apigeelabs.com"
+export SOAP_SERVICE_HOST_ALIAS="soap.$PROJECT.apigeelabs.com"
+export IDP_SERVICE_HOST_ALIAS="idp.$PROJECT.apigeelabs.com"
+
 
 certbot-auto certonly \
   --dns-google \
@@ -185,7 +189,7 @@ certbot-auto certonly \
   --agree-tos \
   --email "$QWIKLAB_USER@qwiklabs.net" \
   --dns-google-credentials ~/assets_service_account.json \
-  -d ${RUNTIME_HOST_ALIAS},${MART_HOST_ALIAS},${PORTAL_HOST_ALIAS} \
+  -d ${RUNTIME_HOST_ALIAS},${MART_HOST_ALIAS},${DEV_PORTAL_HOST_ALIAS},${REST_SERVICE_HOST_ALIAS},${SOAP_SERVICE_HOST_ALIAS},${IDP_SERVICE_HOST_ALIAS} \
   --expand
 rm -f ~/assets_service_account.json
 deactivate
@@ -222,7 +226,10 @@ export SERVICE_ACCOUNT_JSON='$SERVICE_ACCOUNT_JSON'
 export ASSETS_SERVICE_ACCOUNT_JSON='$ASSETS_SERVICE_ACCOUNT_JSON'
 export RUNTIME_HOST_ALIAS="$RUNTIME_HOST_ALIAS"
 export MART_HOST_ALIAS="$MART_HOST_ALIAS"
-export PORTAL_HOST_ALIAS="$PORTAL_HOST_ALIAS"
+export DEV_PORTAL_HOST_ALIAS="$DEV_PORTAL_HOST_ALIAS"
+export REST_SERVICE_HOST_ALIAS="$REST_SERVICE_HOST_ALIAS"
+export SOAP_SERVICE_HOST_ALIAS="$SOAP_SERVICE_HOST_ALIAS"
+export IDP_SERVICE_HOST_ALIAS="$IDP_SERVICE_HOST_ALIAS"
 export RUNTIME_SSL_KEY="$RUNTIME_SSL_KEY"
 export RUNTIME_SSL_CERT="$RUNTIME_SSL_CERT"
 
@@ -247,6 +254,12 @@ function get_service_ip_and_port() {
   echo "${service_ip}:${service_port}"
 }
 
+function get_service_ip() {
+  service_name=$1
+  service_ip=$(kubectl get service ${service_name} -o json | jq ".status.loadBalancer.ingress[0].ip" -r)
+  echo "${service_ip}"
+}
+
 function add_apigeelabs_dns_entry() {
   service_ip=$1
   service_host=$2
@@ -264,6 +277,18 @@ function add_apigeelabs_dns_entry() {
   gcloud auth revoke ${new_active_account}
   gcloud config set account ${old_active_account}
 }
+
+function wait_for_service_and_add_to_dns() {
+  service_name="$1"
+  service_host="$2"
+  echo "Running background process to wait for $service_name address ..."
+  wait_for_service_ip "$service_name"
+  export service_ip=$(get_service_ip service_name)
+  echo "Adding $service_name address (IDP_SERVICE_IP) to DNS"
+  add_apigeelabs_dns_entry ${service_ip} ${service_host}
+  echo "*** $service_name ready: ${service_host} ***"
+}
+
 FUNCSDOC
 
 echo "*** Running lab startup script ***"
