@@ -109,6 +109,10 @@ The following environment variables are available:
 * **$QWIKLAB_PASSWORD** - Password for the qwiklab student
 * **$SERVICE_ACCOUNT_JSON** - JSON string for the Qwiklab user service account
 * **$ASSETS_SERVICE_ACCOUNT_JSON** - JSON string for the SME Academy automation user service account 
+* **$RUNTIME_HOST_ALIAS** - Hostname for the Apigee hyrbdi runtime (e.g. api.qwiklabs-gcp-00-a97f7ffba65e.apigeelabs.com)
+* **$MART_HOST_ALIAS** - Hostname for the Apigee hybrid MART (e.g. mart.qwiklabs-gcp-00-a97f7ffba65e.apigeelabs.com)
+* **$PORTAL_HOST_ALIAS** - Hostname for the developer portal (e.g. developer.qwiklabs-gcp-00-a97f7ffba65e.apigeelabs.com)
+
 
 Also, the deployment manager creates a storage with the same name as the project.
 The bucket is publicly accessible by everyone. The idea is that, as part

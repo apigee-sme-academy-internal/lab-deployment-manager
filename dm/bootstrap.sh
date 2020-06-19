@@ -28,6 +28,8 @@ export PATH=/snap/bin:$PATH
 gcloud auth activate-service-account --key-file account.json
 export SERVICE_ACCOUNT=$(gcloud config list account --format "value(core.account)")
 export PROJECT=$(gcloud config get-value project)
+export ASSETS_SERVICE_ACCOUNT_JSON='${AUTOMATION_GCP_SERVICE_ACCOUNT_JSON}'
+
 
 
 # Create startup script
@@ -43,6 +45,7 @@ export QWIKLAB_PASSWORD="$QWIKLAB_PASSWORD"
 export PROJECT="$PROJECT"
 export HOME=/root
 export SERVICE_ACCOUNT_JSON='${KEY_FILE}'
+export ASSETS_SERVICE_ACCOUNT_JSON='${ASSETS_SERVICE_ACCOUNT_JSON}'
 
 EOF
 # Second section, the rest of the startup (variable expansion is not active)
@@ -142,16 +145,58 @@ echo "*** Setup lab private key ***"
 echo '${LAB_PRIVATE_KEY}' > lab_private_key.pem
 chmod 600 ~/lab_private_key.pem
 export GIT_SSH_COMMAND="ssh -i ~/lab_private_key.pem"
-
-echo "*** Setup Assets service account ***"
-export ASSETS_SERVICE_ACCOUNT_JSON='${ASSETS_SERVICE_ACCOUNT_JSON}'
-
 ssh-keyscan github.com >> ~/.ssh/known_hosts
+
+echo "*** Create certificate and key ***"
+
+echo "Installing python3-env ..."
+apt-get install python3-venv -y
+
+echo "Installing certbot-auto ..."
+wget https://dl.eff.org/certbot-auto
+sudo mv certbot-auto /usr/local/bin/certbot-auto
+sudo chown root /usr/local/bin/certbot-auto
+sudo chmod 0755 /usr/local/bin/certbot-auto
+
+echo "Setting up certbot-auto"
+USE_PYTHON_3=1 certbot-auto --install-only -n
+
+echo "Checking certbot version ..."
+certbot-auto --version
+
+echo "Activating python3 virtual environment ... "
+source /opt/eff.org/certbot/venv/bin/activate
+echo "${ASSETS_SERVICE_ACCOUNT_JSON}" > ~/assets_service_account.json
+chmod 600 ~/assets_service_account.json
+
+echo "Installing certbot-dns-google ... "
+
+pip3 install certbot-dns-google
+
+echo "Requesting new certificate ..."
+
+export RUNTIME_HOST_ALIAS="api.$PROJECT.apigeelabs.com"
+export MART_HOST_ALIAS="mart.$PROJECT.apigeelabs.com"
+export PORTAL_HOST_ALIAS="developer.$PROJECT.apigeelabs.com"
+
+certbot-auto certonly \
+  --dns-google \
+  --non-interactive \
+  --agree-tos \
+  --email "$QWIKLAB_USER@qwiklabs.net" \
+  --dns-google-credentials ~/assets_service_account.json \
+  -d ${RUNTIME_HOST_ALIAS},${MART_HOST_ALIAS},${PORTAL_HOST_ALIAS} \
+  --expand
+rm -f ~/assets_service_account.json
+deactivate
+
+export RUNTIME_SSL_KEY="/etc/letsencrypt/live/${RUNTIME_HOST_ALIAS}/privkey.pem"
+export RUNTIME_SSL_CERT="/etc/letsencrypt/live/${RUNTIME_HOST_ALIAS}/fullchain.pem"
 
 echo "*** Cloning Hybrid player ***"
 git clone git@github.com:apigee-sme-academy-internal/qwiklabs-hybrid-player.git
 pushd qwiklabs-hybrid-player
-git checkout master
+git checkout add_ips_hook
 export PATH=~/qwiklabs-hybrid-player/bin:$PATH
 popd
 
@@ -162,7 +207,8 @@ cd ${LAB_DIR}
 git checkout ${LAB_BRANCH}
 
 echo "*** Setup env file ***"
-cat << HEREDOC > ~/env
+echo "Adding env vars ..."
+cat << ENVVARSDOC > ~/env
 export ZONE="$ZONE"
 export REGION="$REGION"
 export QWIKLAB_USER="$QWIKLAB_USER"
@@ -174,25 +220,51 @@ export GIT_SSH_COMMAND="$GIT_SSH_COMMAND"
 export PATH="$PATH"
 export SERVICE_ACCOUNT_JSON='$SERVICE_ACCOUNT_JSON'
 export ASSETS_SERVICE_ACCOUNT_JSON='$ASSETS_SERVICE_ACCOUNT_JSON'
+export RUNTIME_HOST_ALIAS="$RUNTIME_HOST_ALIAS"
+export MART_HOST_ALIAS="$MART_HOST_ALIAS"
+export PORTAL_HOST_ALIAS="$PORTAL_HOST_ALIAS"
+export RUNTIME_SSL_KEY="$RUNTIME_SSL_KEY"
+export RUNTIME_SSL_CERT="$RUNTIME_SSL_CERT"
+
+ENVVARSDOC
+
+cat << 'FUNCSDOC' >> ~/env
 
 function wait_for_service_ip() {
   service_ip="null"
-  service_name=\$1
-  while [ -z "\$service_ip" ] || [ "\$service_ip" == "null" ]; do
-    echo "Waiting for \${service_name} IP address ...";
-    service_ip=\$(kubectl get service \${service_name} -o json | jq ".status.loadBalancer.ingress[0].ip" -r);
-    [ -z "\$service_ip" ] || [ "\$service_ip" == "null" ] && sleep 10;
+  service_name=$1
+  while [ -z "$service_ip" ] || [ "$service_ip" == "null" ]; do
+    echo "Waiting for ${service_name} IP address ...";
+    service_ip=$(kubectl get service ${service_name} -o json | jq ".status.loadBalancer.ingress[0].ip" -r);
+    [ -z "$service_ip" ] || [ "$service_ip" == "null" ] && sleep 10;
   done;
 }
 
 function get_service_ip_and_port() {
-  service_name=\$1
-  service_ip=\$(kubectl get service \${service_name} -o json | jq ".status.loadBalancer.ingress[0].ip" -r)
-  service_port=\$(kubectl get service \${service_name} -o json | jq ".spec.ports[0].port" -r)
-  echo "\${service_ip}:\${service_port}"
+  service_name=$1
+  service_ip=$(kubectl get service ${service_name} -o json | jq ".status.loadBalancer.ingress[0].ip" -r)
+  service_port=$(kubectl get service ${service_name} -o json | jq ".spec.ports[0].port" -r)
+  echo "${service_ip}:${service_port}"
 }
 
-HEREDOC
+function add_apigeelabs_dns_entry() {
+  service_ip=$1
+  service_host=$2
+
+  rm -f transaction.yaml
+  #save the currently active account
+  old_active_account=$(gcloud config list account --format "value(core.account)")
+
+  gcloud auth activate-service-account --key-file=<(echo $ASSETS_SERVICE_ACCOUNT_JSON)
+  new_active_account=$(gcloud config list account --format "value(core.account)")
+
+  gcloud dns --project=apigee-sme-academy record-sets transaction start --zone=apigeelabs
+  gcloud dns --project=apigee-sme-academy record-sets transaction add "$service_ip" --name="$service_host" --ttl=300 --type=A --zone=apigeelabs
+  gcloud dns --project=apigee-sme-academy record-sets transaction execute --zone=apigeelabs --project apigee-sme-academy
+  gcloud auth revoke ${new_active_account}
+  gcloud config set account ${old_active_account}
+}
+FUNCSDOC
 
 echo "*** Running lab startup script ***"
 ./startup.sh

@@ -26,9 +26,9 @@ else
   export LAB_PRIVATE_KEY=$(openssl genrsa 2048 2> /dev/null)
 fi
 
-export ASSETS_SERVICE_ACCOUNT_JSON=$(gcloud secrets versions access --secret=automation-gcp-service-account latest)
+export AUTOMATION_GCP_SERVICE_ACCOUNT_JSON=$(gcloud secrets versions access --secret=automation-gcp-service-account latest)
 
-envsubst '${LAB_REPO},${LAB_BRANCH},${LAB_PRIVATE_KEY},${ASSETS_SERVICE_ACCOUNT_JSON}' < ./build/dm/bootstrap.sh > ./build/dm/bootstrap.sh.temp
+envsubst '${LAB_REPO},${LAB_BRANCH},${LAB_PRIVATE_KEY},${AUTOMATION_GCP_SERVICE_ACCOUNT_JSON}' < ./build/dm/bootstrap.sh > ./build/dm/bootstrap.sh.temp
 mv ./build/dm/bootstrap.sh.temp ./build/dm/bootstrap.sh
 
 zip -j build/${LAB_ZIP_FILE} ./build/dm/*
