@@ -322,7 +322,7 @@ function wait_for_dns_a_record() {
 }
 
 function setup_logger() {
-  exec 1> >(logger -s -t "$1") 2>&1
+  exec 1> >(sed -e 's/^/'"$1: "'/') 2>&1
 }
 
 FUNCSDOC
