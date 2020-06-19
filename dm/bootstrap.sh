@@ -32,6 +32,7 @@ export ASSETS_SERVICE_ACCOUNT_JSON='${AUTOMATION_GCP_SERVICE_ACCOUNT_JSON}'
 
 
 
+
 # Create startup script
 # This is split into two sections
 # First section, add the env vars (variable expansion is active)
@@ -64,6 +65,16 @@ snap install google-cloud-sdk
 snap install jq
 snap install git-ubuntu --classic
 export PATH=/snap/bin:$PATH
+
+# Save the project svc account name
+export PROJECT_SERVICE_ACCOUNT=$(gcloud config list account --format "value(core.account)")
+
+# Activate and save the assets svc account name
+gcloud auth activate-service-account --key-file=<(echo ${ASSETS_SERVICE_ACCOUNT_JSON})
+export ASSETS_SERVICE_ACCOUNT=$(gcloud config list account --format "value(core.account)")
+
+# Set back the project svc account
+gcloud config set account ${PROJECT_SERVICE_ACCOUNT}
 
 
 export NODE_VERSION=v12.18.0
@@ -182,7 +193,6 @@ export REST_SERVICE_HOST_ALIAS="rest.$PROJECT.apigeelabs.com"
 export SOAP_SERVICE_HOST_ALIAS="soap.$PROJECT.apigeelabs.com"
 export IDP_SERVICE_HOST_ALIAS="idp.$PROJECT.apigeelabs.com"
 
-
 certbot-auto certonly \
   --dns-google \
   --non-interactive \
@@ -232,6 +242,9 @@ export SOAP_SERVICE_HOST_ALIAS="$SOAP_SERVICE_HOST_ALIAS"
 export IDP_SERVICE_HOST_ALIAS="$IDP_SERVICE_HOST_ALIAS"
 export RUNTIME_SSL_KEY="$RUNTIME_SSL_KEY"
 export RUNTIME_SSL_CERT="$RUNTIME_SSL_CERT"
+# Save the project svc account name
+export PROJECT_SERVICE_ACCOUNT="$PROJECT_SERVICE_ACCOUNT"
+export ASSETS_SERVICE_ACCOUNT="$ASSETS_SERVICE_ACCOUNT"
 
 ENVVARSDOC
 
@@ -261,21 +274,28 @@ function get_service_ip() {
 }
 
 function add_apigeelabs_dns_entry() {
-  service_ip=$1
-  service_host=$2
-
-  rm -f transaction.yaml
-  #save the currently active account
-  old_active_account=$(gcloud config list account --format "value(core.account)")
-
-  gcloud auth activate-service-account --key-file=<(echo $ASSETS_SERVICE_ACCOUNT_JSON)
-  new_active_account=$(gcloud config list account --format "value(core.account)")
-
-  gcloud dns --project=apigee-sme-academy record-sets transaction start --zone=apigeelabs
-  gcloud dns --project=apigee-sme-academy record-sets transaction add "$service_ip" --name="$service_host" --ttl=300 --type=A --zone=apigeelabs
-  gcloud dns --project=apigee-sme-academy record-sets transaction execute --zone=apigeelabs --project apigee-sme-academy
-  gcloud auth revoke ${new_active_account}
-  gcloud config set account ${old_active_account}
+  service_ip="$1"
+  service_host="$2"
+  access_token=$(gcloud auth print-access-token --account=${ASSETS_SERVICE_ACCOUNT})
+  curl -X POST  'https://www.googleapis.com/dns/v1/projects/apigee-sme-academy/managedZones/apigeelabs/changes' \
+    -H "Authorization: Bearer $access_token" \
+    -H 'Content-Type: application/json' \
+    -H 'Accept: application/json' \
+    -d "$(cat << DNSEOF
+{
+  "additions": [
+    {
+      "name": "${service_host}.",
+      "type": "A",
+      "ttl": 300,
+      "rrdatas": [
+        "${service_ip}"
+      ]
+    }
+  ]
+}
+DNSEOF
+)"
 }
 
 function wait_for_service_and_add_to_dns() {
@@ -287,6 +307,23 @@ function wait_for_service_and_add_to_dns() {
   echo "Adding $service_name address ($service_ip) to DNS"
   add_apigeelabs_dns_entry ${service_ip} ${service_host}
   echo "*** $service_name ready: ${service_host} ***"
+}
+
+function wait_for_dns_a_record() {
+  host_alias="$1"
+  a_record="null"
+  a_record=$(dig +short -t a ${host_alias});
+  while [ -z "$a_record" ] || [ "$a_record" == "null" ]; do
+    echo "Waiting for ${host_alias} DNS A record ...";
+    a_record=$(dig +short -t a ${host_alias});
+    [ -z "$a_record" ] || [ "$a_record" == "null" ] && sleep 10;
+  done;
+  echo "Got DNS A record \"${a_record}\" for \"${host_alias}\" ..."
+}
+
+function setup_logger() {
+  logger_name="startup-script: $1"
+  exec 1> >(logger -s -t "$1") 2>&1
 }
 
 FUNCSDOC
