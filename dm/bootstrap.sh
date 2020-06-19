@@ -283,8 +283,8 @@ function wait_for_service_and_add_to_dns() {
   service_host="$2"
   echo "Running background process to wait for $service_name address ..."
   wait_for_service_ip "$service_name"
-  export service_ip=$(get_service_ip service_name)
-  echo "Adding $service_name address (IDP_SERVICE_IP) to DNS"
+  service_ip=$(get_service_ip $service_name)
+  echo "Adding $service_name address ($service_ip) to DNS"
   add_apigeelabs_dns_entry ${service_ip} ${service_host}
   echo "*** $service_name ready: ${service_host} ***"
 }
