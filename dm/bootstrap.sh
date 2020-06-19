@@ -322,7 +322,6 @@ function wait_for_dns_a_record() {
 }
 
 function setup_logger() {
-  logger_name="startup-script: $1"
   exec 1> >(logger -s -t "$1") 2>&1
 }
 
