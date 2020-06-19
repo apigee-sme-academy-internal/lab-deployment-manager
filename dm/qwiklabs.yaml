@@ -1,9 +1,10 @@
 imports:
+  - path: auth-hook.sh
   - path: qwiklabs.jinja
   - path: bootstrap.sh
 resources:
   - name: qwiklabs
-    type: qwiklabs.jinja
+    type: gs://apigee-sme-academy/dm/qwiklabs.jinja
     properties:
       #These properties are set by Qwiklabs automation
       keyFile: '{...}' #this is the service account JSON
