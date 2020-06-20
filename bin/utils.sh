@@ -1,5 +1,5 @@
 function setup_logger() {
-  exec 1> >(unbuffer -p sed -u -e 's/^/'"$1: "'/') 2>&1
+  exec 1> >(unbuffer -p sed -e 's/^/'"$1: "'/') 2>&1
 }
 
 # When doing a DNS lookup, check all the authoritative servers for apigeelabs.com
