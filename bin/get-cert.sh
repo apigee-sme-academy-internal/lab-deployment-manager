@@ -48,6 +48,11 @@ export IDP_SERVICE_HOST_ALIAS="idp.${PROJECT_HOST_ALIAS}"
 
 export RUNTIME_SSL_KEY="/etc/letsencrypt/live/${PROJECT_HOST_ALIAS}/privkey.pem"
 export RUNTIME_SSL_CERT="/etc/letsencrypt/live/${PROJECT_HOST_ALIAS}/fullchain.pem"
+
+export DEV_PORTAL_SSL_KEY="/etc/letsencrypt/live/${PROJECT_HOST_ALIAS}/privkey.pem"
+export DEV_PORTAL_SSL_CERT="/etc/letsencrypt/live/${PROJECT_HOST_ALIAS}/cert.pem"
+export DEV_PORTAL_SSL_CHAIN="/etc/letsencrypt/live/${PROJECT_HOST_ALIAS}/fullchain.pem"
+
 EOF
 
 echo "source ~/certs.env" >> ~/env
