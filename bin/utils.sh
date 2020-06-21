@@ -2,6 +2,12 @@ function setup_logger() {
   exec 1> >(stdbuf -i0 -oL -eL sed -e 's/^/'"$1: "'/') 2>&1
 }
 
+function launch_prefixed() {
+  prefix="$1"
+  command="$2"
+  "$command" 1> >(stdbuf -i0 -oL -eL sed -e 's/^/'"$1: "'/') 2>&1
+}
+
 # When doing a DNS lookup, check all the authoritative servers for apigeelabs.com
 # All of them must give a response before we return
 # This logic is needed because we don't know which name server certbot is going to check
