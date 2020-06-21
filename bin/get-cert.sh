@@ -33,6 +33,7 @@ yes | certbot-auto certonly \
   --preferred-challenges dns-01 \
   --manual-auth-hook $(which auth-hook.sh) \
   --agree-tos \
+  --manual-public-ip-logging-ok \
   --email "$QWIKLAB_USER@qwiklabs.net" \
   -d "*.${PROJECT_HOST_ALIAS}"
 deactivate
