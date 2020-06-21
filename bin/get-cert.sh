@@ -40,7 +40,7 @@ fi
 yes | certbot-auto certonly \
   --manual \
   --non-interactive \
-  $(TEST_CERT_FLAG) \
+  $TEST_CERT_FLAG \
   --preferred-challenges dns-01 \
   --manual-auth-hook $(which auth-hook.sh) \
   --agree-tos \
