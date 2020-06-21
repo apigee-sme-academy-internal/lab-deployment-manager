@@ -26,10 +26,21 @@ echo "Requesting new certificate ..."
 
 export PROJECT_HOST_ALIAS="${PROJECT}.apigeelabs.com"
 
+if [[ "${USE_REAL_CERT}" == "true" ]] || [[ "${USE_REAL_CERT}" == "yes" ]] ; then
+  TEST_CERT_FLAG="";
+  echo "*** Requesting real certificate with cert-bot ***"
+else
+  TEST_CERT_FLAG="--test-cert"
+  echo "*** Requesting fake certificate with cert-bot ***"
+  echo "*** Run these commands in MacOS to trust the LetsEncrypt FakeRoot ***"
+  echo "  curl -O -s https://letsencrypt.org/certs/fakelerootx1.pem"
+  echo "  sudo security add-trusted-cert -d -r trustRoot -k '/Library/Keychains/System.keychain' ./fakelerootx1.pem"
+fi
+
 yes | certbot-auto certonly \
   --manual \
   --non-interactive \
-  --test-cert \
+  $(TEST_CERT_FLAG) \
   --preferred-challenges dns-01 \
   --manual-auth-hook $(which auth-hook.sh) \
   --agree-tos \

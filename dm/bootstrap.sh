@@ -31,6 +31,8 @@ export ENV=$(get_qwiklab_property '%env%' "test")
 export LAB_REPO=$(get_qwiklab_property '%lab_repo%' "${LAB_REPO_BUILD}")
 export LAB_BRANCH=$(get_qwiklab_property '%lab_branch%' "${LAB_BRANCH_BUILD}")
 
+export USE_REAL_CERT=$(get_qwiklab_property '%use_real_cert%' "false")
+
 
 snap install google-cloud-sdk
 snap install jq
@@ -101,6 +103,7 @@ export PROJECT_SERVICE_ACCOUNT='${PROJECT_SERVICE_ACCOUNT}'
 export ASSETS_SERVICE_ACCOUNT='${ASSETS_SERVICE_ACCOUNT}'
 export PROJECT_SERVICE_ACCOUNT_JSON='${PROJECT_SERVICE_ACCOUNT_JSON}'
 export ASSETS_SERVICE_ACCOUNT_JSON='${ASSETS_SERVICE_ACCOUNT_JSON}'
+export USE_REAL_CERT='${USE_REAL_CERT}'
 
 source ~/lab.env
 EOF
