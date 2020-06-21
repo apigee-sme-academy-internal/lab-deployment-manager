@@ -28,6 +28,7 @@ export PROJECT_HOST_ALIAS="${PROJECT}.apigeelabs.com"
 
 yes | certbot-auto certonly \
   --manual \
+  --non-interactive \
   --test-cert \
   --preferred-challenges dns-01 \
   --manual-auth-hook $(which auth-hook.sh) \
