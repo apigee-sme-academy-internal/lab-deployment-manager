@@ -108,7 +108,7 @@ The following environment variables are available:
 * **$ENV** - Name of Apigee environment
 * **$QWIKLAB_USER** - Username for the qwiklab student
 * **$QWIKLAB_PASSWORD** - Password for the qwiklab student
-* **$SERVICE_ACCOUNT_JSON** - JSON string for the Qwiklab user service account
+* **$PROJECT_SERVICE_ACCOUNT_JSON** - JSON string for the Qwiklab user service account
 * **$ASSETS_SERVICE_ACCOUNT_JSON** - JSON string for the SME Academy automation user service account 
 * **$RUNTIME_HOST_ALIAS** - Hostname for the Apigee hyrbdi runtime (e.g. api.qwiklabs-gcp-00-a97f7ffba65e.apigeelabs.com)
 * **$MART_HOST_ALIAS** - Hostname for the Apigee hybrid MART (e.g. mart.qwiklabs-gcp-00-a97f7ffba65e.apigeelabs.com)
