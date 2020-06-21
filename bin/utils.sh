@@ -60,9 +60,11 @@ DNSEOF
 }
 
 function wait_for_dns_record() {
-  setup_logger "poll"
   dns_record_type="$1"
   dns_host="$2"
+
+  (
+  setup_logger "poll"
   dns_server="${3:-@8.8.8.8}"
   dns_record=$(dig +short -t ${dns_record_type} ${dns_host} ${dns_server});
   attempts=0
@@ -73,13 +75,16 @@ function wait_for_dns_record() {
     [ -z "$dns_record" ] && sleep 10;
   done;
   echo "Got DNS \"${dns_record_type}\"  record \"${dns_record}\" for \"${dns_host}\" ..."
+  )
 }
 
 
 function wait_for_apigeelabs_dns_record() {
-  setup_logger "poll"
   dns_record_type="$1"
   dns_host="$2"
+
+  (
+  setup_logger "poll"
   dns_record=$(short_dig_apigeelabs ${dns_record_type} ${dns_host});
   attempts=0
   while [ -z "$dns_record" ] ; do
@@ -89,6 +94,7 @@ function wait_for_apigeelabs_dns_record() {
     [ -z "$dns_record" ]  && sleep 10;
   done;
   echo "Got DNS \"${dns_record_type}\" record \"${dns_record}\" for \"${dns_host}\" ..."
+  )
 }
 
 
@@ -99,9 +105,10 @@ function get_service_ip() {
 }
 
 function wait_for_service_ip() {
+  service_name=$1
+  (
   setup_logger "poll"
   service_ip="null"
-  service_name=$1
   attempts=0
   while [ -z "$service_ip" ] || [ "$service_ip" == "null" ]; do
     (("attempts = attempts + 1"))
@@ -110,6 +117,7 @@ function wait_for_service_ip() {
     [ -z "$service_ip" ] || [ "$service_ip" == "null" ] && sleep 10;
   done;
   echo "Got IP Address \"${service_ip}\" for \"${service_name}\" ...";
+  )
 }
 
 
@@ -148,37 +156,41 @@ function clone_repo_and_checkout_branch(){
 
 
 function wait_for_apigee_config_api_ready() {
-  setup_logger "poll"
   org="$1"
+  (
+  setup_logger "poll"
   access_token=$(gcloud auth print-access-token --account=${PROJECT_SERVICE_ACCOUNT})
   status_code=""
   attempts=0
   while [ -z "$status_code" ] || [ "$status_code" != "200" ]; do
     (("attempts = attempts + 1"))
     echo "Waiting for Apigee config API to be ready (${attempts} attempts(s)) ..." && sleep 10;
-    status_code=$(curl -s -o /dev/null \
+    status_code=$(curl -k -s -o /dev/null \
                       -w "%{http_code}" \
                       --max-time 5 \
                       -H "Authorization: Bearer ${access_token}" \
                       -X GET "https://apigee.googleapis.com/v1/organizations/${org}/apiproducts" | head -1)
   done;
   echo "Got HTTP \"${status_code}\" from Apigee config API ..." && sleep 10;
+  )
 }
 
 function wait_for_devportal_apidocs_api_ready() {
-  setup_logger "poll"
   dev_portal_host_alias="$1"
+  (
+  setup_logger "poll"
   status_code=""
   attempts=0
   while [ -z "$status_code" ] || [ "$status_code" != "200" ]; do
     (("attempts = attempts + 1"))
     echo "Waiting for Dev Portal API-Docs API to be ready (${attempts} attempts(s)) ..." && sleep 10;
-    status_code=$(curl -s -o /dev/null \
+    status_code=$(curl -k -s -o /dev/null \
                       -w "%{http_code}" \
                       --max-time "5" \
                       -X GET "https://${dev_portal_host_alias}/jsonapi/apidoc/apidoc" | head -1)
   done;
   echo "Got HTTP \"${status_code}\" from the Portal API-Docs API ..." && sleep 10;
+  )
 }
 
 
