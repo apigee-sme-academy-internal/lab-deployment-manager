@@ -60,6 +60,7 @@ DNSEOF
 }
 
 function wait_for_dns_record() {
+  setup_logger "poll"
   dns_record_type="$1"
   dns_host="$2"
   dns_server="${3:-@8.8.8.8}"
@@ -71,11 +72,12 @@ function wait_for_dns_record() {
     dns_record=$(dig +short -t ${dns_record_type} ${dns_host} ${dns_server});
     [ -z "$dns_record" ] && sleep 10;
   done;
-  echo "Got DNS ${dns_record_type}  record \"${dns_record}\" for \"${dns_host}\" ..."
+  echo "Got DNS \"${dns_record_type}\"  record \"${dns_record}\" for \"${dns_host}\" ..."
 }
 
 
 function wait_for_apigeelabs_dns_record() {
+  setup_logger "poll"
   dns_record_type="$1"
   dns_host="$2"
   dns_record=$(short_dig_apigeelabs ${dns_record_type} ${dns_host});
@@ -86,7 +88,7 @@ function wait_for_apigeelabs_dns_record() {
     dns_record=$(short_dig_apigeelabs ${dns_record_type} ${dns_host});
     [ -z "$dns_record" ]  && sleep 10;
   done;
-  echo "Got DNS ${dns_record_type}  record \"${dns_record}\" for \"${dns_host}\" ..."
+  echo "Got DNS \"${dns_record_type}\" record \"${dns_record}\" for \"${dns_host}\" ..."
 }
 
 
@@ -97,6 +99,7 @@ function get_service_ip() {
 }
 
 function wait_for_service_ip() {
+  setup_logger "poll"
   service_ip="null"
   service_name=$1
   attempts=0
@@ -106,6 +109,7 @@ function wait_for_service_ip() {
     service_ip=$(kubectl get service "${service_name}" -o json | jq ".status.loadBalancer.ingress[0].ip" -r);
     [ -z "$service_ip" ] || [ "$service_ip" == "null" ] && sleep 10;
   done;
+  echo "Got IP Address \"${service_ip}\" for \"${service_name}\" ...";
 }
 
 
@@ -140,4 +144,21 @@ function clone_repo_and_checkout_branch(){
   fi
   git checkout ${git_branch}
   popd &> /dev/null
+}
+
+
+function wait_for_apigee_config_api_ready() {
+  setup_logger "poll"
+  org="$1"
+  access_token=$(gcloud auth print-access-token --account=${PROJECT_SERVICE_ACCOUNT})
+  status_code=""
+  attempts=0
+  while [ -z "$status_code" ] || [ "$status_code" != "200" ]; do
+    (("attempts = attempts + 1"))
+    echo "Waiting for Apigee config API to be ready (${attempts} attempts(s)) ..." && sleep 10;
+    status_code=$(curl -s -o /dev/null -w "%{http_code}" \
+                      -H "Authorization: Bearer ${access_token}" \
+                      -X GET "https://apigee.googleapis.com/v1/organizations/${org}/apiproducts" | head -1)
+  done;
+  echo "Got HTTP \"${status_code}\" from Apigee config API ..." && sleep 10;
 }
