@@ -156,9 +156,29 @@ function wait_for_apigee_config_api_ready() {
   while [ -z "$status_code" ] || [ "$status_code" != "200" ]; do
     (("attempts = attempts + 1"))
     echo "Waiting for Apigee config API to be ready (${attempts} attempts(s)) ..." && sleep 10;
-    status_code=$(curl -s -o /dev/null -w "%{http_code}" \
+    status_code=$(curl -s -o /dev/null \
+                      -w "%{http_code}" \
+                      --max-time 5 \
                       -H "Authorization: Bearer ${access_token}" \
                       -X GET "https://apigee.googleapis.com/v1/organizations/${org}/apiproducts" | head -1)
   done;
   echo "Got HTTP \"${status_code}\" from Apigee config API ..." && sleep 10;
 }
+
+function wait_for_devportal_apidocs_api_ready() {
+  setup_logger "poll"
+  dev_portal_host_alias="$1"
+  status_code=""
+  attempts=0
+  while [ -z "$status_code" ] || [ "$status_code" != "200" ]; do
+    (("attempts = attempts + 1"))
+    echo "Waiting for Dev Portal API-Docs API to be ready (${attempts} attempts(s)) ..." && sleep 10;
+    status_code=$(curl -s -o /dev/null \
+                      -w "%{http_code}" \
+                      --max-time "5" \
+                      -X GET "https://${dev_portal_host_alias}/jsonapi/apidoc/apidoc" | head -1)
+  done;
+  echo "Got HTTP \"${status_code}\" from the Portal API-Docs API ..." && sleep 10;
+}
+
+
