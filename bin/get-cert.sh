@@ -31,10 +31,19 @@ if [[ "${USE_REAL_CERT}" == "true" ]] || [[ "${USE_REAL_CERT}" == "yes" ]] ; the
   echo "*** Requesting real certificate with cert-bot ***"
 else
   TEST_CERT_FLAG="--test-cert"
-  echo "*** Requesting fake certificate with cert-bot ***"
-  echo "*** Run these commands in MacOS to trust the LetsEncrypt FakeRoot ***"
+  echo "*** Requesting fake certificate with cert-bot***"
+  echo ""
+  echo "*** Run these commands in MacOS to trust the LE FakeRoot ***"
   echo "  curl -O -s https://letsencrypt.org/certs/fakelerootx1.pem"
   echo "  sudo security add-trusted-cert -d -r trustRoot -k '/Library/Keychains/System.keychain' ./fakelerootx1.pem"
+  echo ""
+  echo "*** Run these commands in Ubuntu/Debian to trust the LE FakeRoot ***"
+  echo "  curl -O -s https://letsencrypt.org/certs/fakelerootx1.pem"
+  echo "  sudo cp fakelerootx1.pem /usr/local/share/ca-certificates/fakelerootx1.crt"
+  echo "  sudo update-ca-certificates"
+  echo ""
+  echo " See full instructions at: https://manuals.gfi.com/en/kerio/connect/content/server-configuration/ssl-certificates/adding-trusted-root-certificates-to-the-server-1605.html"
+  echo ""
 fi
 
 yes | certbot-auto certonly \
@@ -67,6 +76,15 @@ export DEV_PORTAL_SSL_CERT="/etc/letsencrypt/live/${PROJECT_HOST_ALIAS}/cert.pem
 export DEV_PORTAL_SSL_CHAIN="/etc/letsencrypt/live/${PROJECT_HOST_ALIAS}/fullchain.pem"
 
 EOF
+
+if [[ ! -z "${TEST_CERT_FLAG}" ]] ; then
+  echo "**********************************"
+  echo "*** Installing LE Fakeroot CA  ***"
+  echo "**********************************"
+  curl -O -s https://letsencrypt.org/certs/fakelerootx1.pem
+  sudo cp fakelerootx1.pem /usr/local/share/ca-certificates/fakelerootx1.crt
+  sudo update-ca-certificates
+fi
 
 echo "source ~/certs.env" >> ~/env
 
