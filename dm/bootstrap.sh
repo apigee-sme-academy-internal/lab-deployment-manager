@@ -17,6 +17,8 @@ export DM_REPO=${DM_REPO:-git@github.com:apigee-sme-academy-internal/lab-deploym
 export DM_BRANCH='%dm_branch%'
 export DM_BRANCH=${DM_BRANCH:-master}
 
+export ENV='%env%'
+export ENV=${ENV:-test}
 
 # Values from Qwiklabs take precedence
 export LAB_REPO='%lab_repo%'
@@ -89,6 +91,7 @@ export PATH="${HOME}/lab-deployment-manager/bin:/snap/bin:\$PATH"
 source utils.sh
 
 export PROJECT='${PROJECT}'
+export ENV='${ENV}'
 export GIT_SSH_COMMAND="ssh -i ~/lab-privkey.pem"
 export PROJECT_SERVICE_ACCOUNT='${PROJECT_SERVICE_ACCOUNT}'
 export ASSETS_SERVICE_ACCOUNT='${ASSETS_SERVICE_ACCOUNT}'
