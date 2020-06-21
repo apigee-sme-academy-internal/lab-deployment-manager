@@ -6,26 +6,30 @@ export PROJECT_SERVICE_ACCOUNT_JSON='%keyFile%'
 export ASSETS_SERVICE_ACCOUNT_JSON='${AUTOMATION_GCP_SERVICE_ACCOUNT_JSON}'
 export QWIKLAB_USER='%userName%'
 export QWIKLAB_PASSWORD='%userPassword%'
-export ZONE='%zone%'
-export REGION='%region%'
 
-# Values from Qwiklabs take precedence
 
-export DM_REPO='%dm_repo%'
-export DM_REPO=${DM_REPO:-git@github.com:apigee-sme-academy-internal/lab-deployment-manager.git}
+# Values from qwiklabs take precedence
+function get_qwiklab_property() {
+  qwiklabs_value="$1";
+  default_value="$2"
+  if [[ -z "${qwiklabs_value}" ]] || [[ "${qwiklabs_value}" =~ ^%.*%$ ]] ; then
+    echo "${default_value}"
+    return
+  fi
 
-export DM_BRANCH='%dm_branch%'
-export DM_BRANCH=${DM_BRANCH:-master}
+  echo "${qwiklabs_value}"
+}
 
-export ENV='%env%'
-export ENV=${ENV:-test}
 
-# Values from Qwiklabs take precedence
-export LAB_REPO='%lab_repo%'
-export LAB_REPO="${LAB_REPO:-${LAB_REPO_BUILD}}"
+export ZONE=$(get_qwiklab_property '%zone%' "us-west1-b")
+export REGION=$(get_qwiklab_property '%region%' "us-west1")
 
-export LAB_BRANCH='%lab_branch%'
-export LAB_BRANCH="${LAB_BRANCH:-${LAB_BRANCH_BUILD}}"
+export DM_REPO=$(get_qwiklab_property '%dm_repo%' "git@github.com:apigee-sme-academy-internal/lab-deployment-manager.git")
+export DM_BRANCH=$(get_qwiklab_property '%dm_branch%' "master")
+export ENV=$(get_qwiklab_property '%env%' "test")
+
+export LAB_REPO=$(get_qwiklab_property '%lab_repo%' "${LAB_REPO_BUILD}")
+export LAB_BRANCH=$(get_qwiklab_property '%lab_branch%' "${LAB_BRANCH_BUILD}")
 
 
 snap install google-cloud-sdk
