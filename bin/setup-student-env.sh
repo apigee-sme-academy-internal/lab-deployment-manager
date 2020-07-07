@@ -9,7 +9,7 @@ echo "*********************************"
 
 STUDENT_HOME="/home/${QWIKLABS_USERNAME}"
 
-cat << EOF >> $STUDENT_HOME/lab.env
+cat << EOF >> "${STUDENT_HOME}/lab.env"
 
 export PATH="/snap/bin:\$PATH"
 
@@ -26,11 +26,10 @@ export ACCESS_TOKEN=\$(gcloud auth print-access-token)
 
 EOF
 
-chmod a+rwx $STUDENT_HOME/lab.env
+chown "${QWIKLABS_USERNAME}:ubuntu" "${STUDENT_HOME}/lab.env"
 
-export HOME=$STUDENT_HOME
+export HOME=${STUDENT_HOME}
 sudo -u $QWIKLABS_USERNAME -E bash -c 'gcloud auth activate-service-account --key-file=<(echo ${PROJECT_SERVICE_ACCOUNT_JSON})'
-
 
 echo "*******************************"
 echo "*** (END) Setup Student Env ***"
