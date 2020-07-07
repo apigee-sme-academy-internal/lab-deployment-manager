@@ -34,13 +34,8 @@ export LAB_BRANCH=$(get_qwiklab_property '%lab_branch%' "${LAB_BRANCH_BUILD}")
 export USE_REAL_CERT=$(get_qwiklab_property '%use_real_cert%' "false")
 
 
-echo "*** Adding Student Account $(QWIKLABS_USERNAME) ***"
-adduser --quiet \
-        --disabled-password \
-        --shell /bin/bash \
-        --home "/home/${QWIKLABS_USERNAME}" \
-        --gecos "${QWIKLABS_USERNAME}" \
-        ${QWIKLABS_USERNAME}
+echo "*** Adding Student Account ${QWIKLABS_USERNAME} Home ***"
+mkhomedir_helper ${QWIKLABS_USERNAME}
 
 snap install google-cloud-sdk
 snap install jq
@@ -81,8 +76,8 @@ service google-fluentd start
 
 echo "*** Installing kubectl, git ***"
 snap install kubectl --classic
-snap install git-ubuntu --classic
 export PATH=/snap/bin:$PATH
+apt-get install -y git
 
 echo "*** Setup lab private key ***"
 echo '${LAB_PRIVATE_KEY}' > lab-privkey.pem
