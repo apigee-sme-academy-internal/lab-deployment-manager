@@ -6,6 +6,7 @@ setup_logger "dm"
 
 get-cert.sh
 install-tools.sh
+setup-student-env.sh
 setup-gs-bucket.sh
 setup-hybrid-player-repo.sh
 setup-lab-repo.sh
