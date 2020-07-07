@@ -54,7 +54,7 @@ yes | certbot-auto certonly \
   --manual-auth-hook $(which auth-hook.sh) \
   --agree-tos \
   --manual-public-ip-logging-ok \
-  --email "$QWIKLAB_USER@qwiklabs.net" \
+  --email "$QWIKLABS_USERNAME@qwiklabs.net" \
   -d "*.${PROJECT_HOST_ALIAS}"
 deactivate
 
