@@ -11,7 +11,7 @@ echo "********************************"
 cd ~
 
 echo "*** Installing xml tools ***"
-apt-get install -y libxml2-utils
+apt-get install -y libxml2-utils xmlformat-perl
 
 export NODE_VERSION=v12.18.0
 echo "*** Installing Node.js ($NODE_VERSION) ***"
