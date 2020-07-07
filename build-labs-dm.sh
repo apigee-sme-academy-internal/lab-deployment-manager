@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-
+gcloud config set project apigee-sme-academy
 gcloud secrets versions access --secret=automation-deploy-key latest > ./build/deploy-key.pem
 
 echo "##### Building Lab 1 DM ..."
