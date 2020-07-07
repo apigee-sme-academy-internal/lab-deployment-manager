@@ -106,8 +106,8 @@ The following environment variables are available:
 * **$REGION** - Region for the GCP project
 * **$PROJECT** - Name of the GCP project (also name of Apigee organization)
 * **$ENV** - Name of Apigee environment
-* **$QWIKLAB_USER** - Username for the qwiklab student
-* **$QWIKLAB_PASSWORD** - Password for the qwiklab student
+* **QWIKLABS_USERNAME** - Username for the qwiklabs student
+* **QWIKLABS_USERPASSWORD** - Password for the qwiklabs student
 * **$PROJECT_SERVICE_ACCOUNT_JSON** - JSON string for the Qwiklab user service account
 * **$ASSETS_SERVICE_ACCOUNT_JSON** - JSON string for the SME Academy automation user service account 
 * **$RUNTIME_HOST_ALIAS** - Hostname for the Apigee hyrbdi runtime (e.g. api.qwiklabs-gcp-00-a97f7ffba65e.apigeelabs.com)
