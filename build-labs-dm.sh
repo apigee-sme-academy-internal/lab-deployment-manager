@@ -28,7 +28,7 @@ export LAB_BRANCH="master"
 ./build.sh ${LAB_REPO} ${LAB_BRANCH} ./build/deploy-key.pem ${LAB_ZIP}
 
 echo "##### Building Lab 5 DM ..."
-export LAB_ZIP="lab4-dm.zip"
+export LAB_ZIP="lab5-dm.zip"
 export LAB_REPO="git@github.com:apigee-sme-academy-internal/app-modernization-lab-5.git"
 export LAB_BRANCH="master"
 ./build.sh ${LAB_REPO} ${LAB_BRANCH} ./build/deploy-key.pem ${LAB_ZIP}
