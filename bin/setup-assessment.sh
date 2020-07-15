@@ -13,7 +13,7 @@ export ASSESSMENT_DIR="${STUDENT_HOME}/assessment"
 # Copy framework to student's home directory
 cp -r "${HYBRID_PLAYER_DIR}/assessment" "${ASSESSMENT_DIR}"
 
-cp /root/certs.env "${ASSESSMENT_DIR}/assessment"
+cp ~/certs.env "${ASSESSMENT_DIR}/"
 
 # Overwrite environment file
 cat << EOF > "${ASSESSMENT_DIR}/assessment.env"
