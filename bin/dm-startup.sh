@@ -9,6 +9,7 @@ install-tools.sh
 setup-student-env.sh
 setup-gs-bucket.sh
 setup-hybrid-player-repo.sh
+setup-assessment.sh
 setup-lab-repo.sh
 
 # hand off the remaining setup to the lab's startup.sh
