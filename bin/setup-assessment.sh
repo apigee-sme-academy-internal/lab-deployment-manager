@@ -18,7 +18,7 @@ cp ~/certs.env "${ASSESSMENT_DIR}/"
 # Overwrite environment file
 cat << EOF > "${ASSESSMENT_DIR}/assessment.env"
 # this file is used for activity tracking, do not edit it manually
-BASEDIR="\$( cd "$( dirname "\${BASH_SOURCE[0]}" )" && pwd )"
+BASEDIR="\$( cd "\$( dirname "\${BASH_SOURCE[0]}" )" && pwd )"
 export PROJECT='${PROJECT}'
 export CLUSTER_ZONE='${ZONE}'
 export PATH="/snap/bin:\$PATH"
