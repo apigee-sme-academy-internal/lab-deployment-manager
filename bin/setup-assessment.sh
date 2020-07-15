@@ -25,7 +25,7 @@ export PATH="/snap/bin:\$PATH"
 export ORG='${PROJECT}'
 export ENV='test'
 export PROJECT_SERVICE_ACCOUNT_JSON='${PROJECT_SERVICE_ACCOUNT_JSON}'
-source "${BASEDIR}/certs.env"
+source "\${BASEDIR}/certs.env"
 EOF
 
 # Make files accessible by student
