@@ -15,8 +15,17 @@ cp -r "${HYBRID_PLAYER_DIR}/assessment" "${ASSESSMENT_DIR}"
 
 cp ~/certs.env "${ASSESSMENT_DIR}/"
 
-# render env file
-envsubst < "${ASSESSMENT_DIR}/assessment.env.tpl" > "${ASSESSMENT_DIR}/assessment.env"
+# render handlebars style template using {{...}} style
+# first, replace $ for §
+# second, replace {{FOO}} for ${FOO}
+# third, substitute env vars
+# fourth, replace § for $
+
+cat "${ASSESSMENT_DIR}/assessment.env.hbs" \
+   | perl -pe 's#\$#§#g' \
+   | perl -pe 's#\{\{([^}]+)\}\}#\${$1}#g' \
+   | envsubst \
+   | perl -pe 's#§#\$#g' > "${ASSESSMENT_DIR}/assessment.env"
 
 # make files accessible by student
 chown -R "${QWIKLABS_USERNAME}:ubuntu" "${ASSESSMENT_DIR}"
