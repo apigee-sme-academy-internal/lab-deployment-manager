@@ -7,7 +7,7 @@ echo "********************************"
 echo "*** (BEGIN) Setup Assessment ***"
 echo "********************************"
 
-STUDENT_HOME="/home/${QWIKLABS_USERNAME}"
+export STUDENT_HOME="/home/${QWIKLABS_USERNAME}"
 export ASSESSMENT_DIR="${STUDENT_HOME}/assessment"
 
 # copy framework to student's home directory
