@@ -194,3 +194,62 @@ function wait_for_devportal_apidocs_api_ready() {
 }
 
 
+function task_file() {
+  echo "/tmp/$1"
+}
+
+function task_start() {
+  t_id="$1"
+  t_name="$2"
+  t_file=$(task_file "${t_id}")
+
+  true > "${t_file}"
+  task_set_state "${t_id}" "${t_name}"
+  task_set_state "${t_id}" "started"
+}
+
+function task_set_state() {
+  echo "$2" >> $(task_file "$1")
+}
+
+function task_get_name() {
+  t_id="$1"
+  t_file=$(task_file "${t_id}")
+  if [ ! -f "${t_file}" ] ; then
+    echo "${t_id}"
+    return;
+  fi
+
+  head -1 "${t_file}"
+}
+
+function task_get_state() {
+  t_id="$1"
+  t_file=$(task_file "${t_id}")
+  if [ ! -f "${t_file}" ] ; then
+    echo "unknown"
+    return;
+  fi
+
+  tail -1 "${t_file}"
+}
+
+function task_end() {
+  t_id="$1"
+  task_set_state "${t_id}" "done"
+}
+
+function task_run() {
+  t_id="$1"; shift;
+  t_name="$1"; shift
+  task_start "${t_id}" "${t_name}"
+  "$@"
+  t_code="$?"
+  if [[ "${t_code}" != "0" ]] ; then
+    task_set_state "${t_id}" "failed"
+    return 1
+  fi
+  
+  task_set_state "${t_id}" "done"
+  return 0
+}
