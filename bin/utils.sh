@@ -211,8 +211,9 @@ function task_start() {
 export -f task_start
 
 function task_set_state() {
-  echo "$2" >> $(task_file "$1")
+  echo "$2 | $(date +%s)" >> $(task_file "$1")
 }
+
 export -f task_set_state
 
 function task_get_name() {
@@ -243,6 +244,7 @@ function task_end() {
   t_id="$1"
   task_set_state "${t_id}" "done"
 }
+
 export -f task_end
 
 function task_run() {
@@ -256,55 +258,7 @@ function task_run() {
     return 1
   fi
 
-  task_set_state "${t_id}" "passed"
+  task_end "${t_id}"
   return 0
 }
 export -f task_run
-
-
-function task_get_passed_percent() {
-  t_ids="$@"
-  total_count=0
-  passed_count=0
-
-  for t_id in ${t_ids} ; do
-    (( total_count++ ))
-    t_state=$(task_get_state "${t_id}")
-    if [[ "${t_state}" == "passed" ]] ; then
-      (( passed_count++ ))
-    fi
-  done
-
-  printf "$(echo "scale=2; $passed_count/$total_count * 100" | bc | cut -d . -f 1)"
-}
-
-
-function task_get_json() {
-  t_ids="$@"
-  total_count=0
-  passed_count=0
-
-  summary=""
-  for t_id in ${t_ids} ; do
-    (( total_count++ ))
-    t_state=$(task_get_state "${t_id}")
-    t_name=$(task_get_name "${t_id}")
-    if [[ "${t_state}" == "passed" ]] ; then
-      (( passed_count++ ))
-    fi
-
-    summary="${summary}$(printf "%-40s ... %s%s" "${t_name}" "${t_state}" "\n")"
-
-  done
-
-  passed_percent="$(echo "scale=2; $passed_count/$total_count * 100" | bc | cut -d . -f 1)"
-  summary="${summary}\n${passed_percent}% passed"
-
-  done="false"
-  if [[ "${total_count}" == "${passed_count}" ]] ; then
-    done="true"
-  fi
-
-  echo "{\"done\": ${done}, \"score\": ${passed_percent}, \"messsage\": \"${summary}\", \"student_message\": \"${summary}\"}";
-}
-
