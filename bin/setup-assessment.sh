@@ -13,8 +13,6 @@ export ASSESSMENT_DIR="${STUDENT_HOME}/assessment"
 # copy framework to student's home directory
 cp -r "${HYBRID_PLAYER_DIR}/assessment" "${ASSESSMENT_DIR}"
 
-cp ~/certs.env "${ASSESSMENT_DIR}/"
-
 # render handlebars style template using {{...}} style
 # first, replace $ for §
 # second, replace {{FOO}} for ${FOO}
