@@ -102,6 +102,8 @@ source utils.sh
 
 export PROJECT='${PROJECT}'
 export ENV='${ENV}'
+export REGION='${REGION}'
+export ZONE='${ZONE}'
 export GIT_SSH_COMMAND="ssh -i ~/lab-privkey.pem"
 export PROJECT_SERVICE_ACCOUNT='${PROJECT_SERVICE_ACCOUNT}'
 export ASSETS_SERVICE_ACCOUNT='${ASSETS_SERVICE_ACCOUNT}'
