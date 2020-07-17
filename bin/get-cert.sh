@@ -6,6 +6,7 @@ setup_logger "get-cert"
 echo "***********************************"
 echo "*** (BEGIN) Getting certificate ***"
 echo "***********************************"
+lab-bootstrap begin lab-certs "Creating certificates"
 
 echo "Installing certbot-auto ..."
 wget https://dl.eff.org/certbot-auto
@@ -88,6 +89,8 @@ if [[ ! -z "${TEST_CERT_FLAG}" ]] ; then
 fi
 
 echo "source ~/certs.env" >> ~/env
+
+lab-bootstrap end lab-certs
 
 echo "*********************************"
 echo "*** (END) Getting certificate ***"

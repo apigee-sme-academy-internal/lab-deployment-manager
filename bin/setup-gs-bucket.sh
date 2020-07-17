@@ -6,6 +6,7 @@ setup_logger "setup-gs-bucket"
 echo "*******************************************"
 echo "*** (BEGIN) Setting up GS Assets Bucket ***"
 echo "*******************************************"
+lab-bootstrap begin lab-gs "Configuring GS assets bucket"
 
 cd ~
 
@@ -56,6 +57,7 @@ CORSHEREDOC
 
 gsutil cors set bucket-cors.json gs://${PROJECT}
 
+lab-bootstrap end lab-gs
 echo "*****************************************"
 echo "*** (END) Setting up GS Assets Bucket ***"
 echo "*****************************************"

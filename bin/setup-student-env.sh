@@ -6,6 +6,8 @@ source ~/env
 echo "*********************************"
 echo "*** (BEGIN) Setup Student Env ***"
 echo "*********************************"
+lab-bootstrap begin lab-student-env "Configuring student environment"
+
 
 STUDENT_HOME="/home/${QWIKLABS_USERNAME}"
 
@@ -31,6 +33,7 @@ chown "${QWIKLABS_USERNAME}:ubuntu" "${STUDENT_HOME}/lab.env"
 export HOME=${STUDENT_HOME}
 sudo -u $QWIKLABS_USERNAME -E bash -c 'gcloud auth activate-service-account --key-file=<(echo ${PROJECT_SERVICE_ACCOUNT_JSON})'
 
+lab-bootstrap end lab-student-env
 echo "*******************************"
 echo "*** (END) Setup Student Env ***"
 echo "*******************************"

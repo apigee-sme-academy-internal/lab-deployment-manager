@@ -6,6 +6,7 @@ source ~/env
 echo "********************************"
 echo "*** (BEGIN) Setup Assessment ***"
 echo "********************************"
+lab-bootstrap begin lab-at "Configuring activity tracking"
 
 export STUDENT_HOME="/home/${QWIKLABS_USERNAME}"
 export ASSESSMENT_DIR="${STUDENT_HOME}/assessment"
@@ -31,6 +32,7 @@ chown -R "${QWIKLABS_USERNAME}:ubuntu" "${ASSESSMENT_DIR}"
 # Make shell scripts executable
 find "${ASSESSMENT_DIR}" -name "*.sh" -exec chmod a+x {} \;
 
+lab-bootstrap end lab-at
 echo "******************************"
 echo "*** (END) Setup Assessment ***"
 echo "******************************"

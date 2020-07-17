@@ -7,6 +7,8 @@ setup_logger "install-tools"
 echo "********************************"
 echo "*** (BEGIN) Installing tools ***"
 echo "********************************"
+lab-bootstrap begin lab-tools "Installing node,java,mvn"
+
 
 cd ~
 
@@ -54,6 +56,7 @@ EOF
 
 echo "source ~/tools.env" >> ~/env
 
+lab-bootstrap end lab-tools
 echo "********************************"
 echo "*** (END) Installing tools ***"
 echo "********************************"

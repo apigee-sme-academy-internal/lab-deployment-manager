@@ -6,6 +6,8 @@ setup_logger "setup-hybrid-player"
 echo "***********************************"
 echo "*** (BEGIN) Setup Hybrid Player ***"
 echo "***********************************"
+lab-bootstrap begin hybrid-player "Cloning hybrid player"
+
 
 cd ~
 
@@ -24,6 +26,7 @@ EOF
 
 echo "source ~/hybrid-player.env" >> ~/env
 
+lab-bootstrap end hybrid-player
 echo "*********************************"
 echo "*** (END) Setup Hybrid Player ***"
 echo "*********************************"

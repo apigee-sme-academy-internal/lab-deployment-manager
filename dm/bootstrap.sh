@@ -34,8 +34,16 @@ export LAB_BRANCH=$(get_qwiklab_property '%lab_branch%' "${LAB_BRANCH_BUILD}")
 export USE_REAL_CERT=$(get_qwiklab_property '%use_real_cert%' "false")
 
 
+echo "*** Configure lab-bootstrap tool ***"
+curl -sSOL https://github.com/apigee-sme-academy-internal/lab-task-tracker/raw/master/dist/linux/lab-bootstrap
+mv ./lab-bootstrap /usr/bin/
+chmod a+rx /usr/bin/lab-bootstrap
+
+lab-bootstrap begin student-account "Setting up student account"
 echo "*** Adding Student Account ${QWIKLABS_USERNAME} Home ***"
 mkhomedir_helper ${QWIKLABS_USERNAME}
+lab-bootstrap end student-account
+
 
 snap install google-cloud-sdk
 snap install jq
@@ -67,17 +75,24 @@ echo "${PROJECT_SERVICE_ACCOUNT_JSON}" > $GOOGLE_APPLICATION_CREDENTIALS
 chown root:root "$GOOGLE_APPLICATION_CREDENTIALS"
 chmod 0400 "$GOOGLE_APPLICATION_CREDENTIALS"
 
+
 echo "*** Installing GCP Logging Agent ***"
+lab-bootstrap begin cloud-logger "Setting up cloud logger"
 curl -sSO https://dl.google.com/cloudagents/add-logging-agent-repo.sh
 bash add-logging-agent-repo.sh
 apt-get update -y
 apt-get install -y google-fluentd google-fluentd-catch-all-config-structured
 service google-fluentd start
+lab-bootstrap end cloud-logger
+
 
 echo "*** Installing kubectl, git ***"
+lab-bootstrap begin base-tools "Installing kubectl, git"
 snap install kubectl --classic
 export PATH=/snap/bin:$PATH
 apt-get install -y git
+lab-bootstrap end base-tools
+
 
 echo "*** Setup lab private key ***"
 echo '${LAB_PRIVATE_KEY}' > lab-privkey.pem
@@ -117,6 +132,7 @@ source ~/lab.env
 EOF
 
 echo "*** Cloning deployment manager (${DM_BRANCH} branch) ***"
+lab-bootstrap begin lab-dm "Cloning deployment manager"
 git clone -q ${DM_REPO}
 pushd lab-deployment-manager
 git checkout ${DM_BRANCH}
@@ -124,5 +140,7 @@ export PATH=~/lab-deployment-manager/bin:$PATH
 popd
 
 apt-get install expect -y
+lab-bootstrap end lab-dm
+
 
 unbuffer dm-startup.sh
