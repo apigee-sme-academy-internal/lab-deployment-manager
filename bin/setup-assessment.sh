@@ -20,11 +20,12 @@ cp -r "${HYBRID_PLAYER_DIR}/assessment" "${ASSESSMENT_DIR}"
 # third, substitute env vars
 # fourth, replace § for $
 
-cat "${ASSESSMENT_DIR}/assessment.env.hbs" \
+cat "${ASSESSMENT_DIR}/assessment.env" \
    | perl -pe 's#\$#§#g' \
    | perl -pe 's#\{\{([^}]+)\}\}#\${$1}#g' \
    | envsubst \
-   | perl -pe 's#§#\$#g' > "${ASSESSMENT_DIR}/assessment.env"
+   | perl -pe 's#§#\$#g' > "${ASSESSMENT_DIR}/assessment.env.new"
+mv "${ASSESSMENT_DIR}/assessment.env.new" "${ASSESSMENT_DIR}/assessment.env"
 
 # make files accessible by student
 chown -R "${QWIKLABS_USERNAME}:ubuntu" "${ASSESSMENT_DIR}"
