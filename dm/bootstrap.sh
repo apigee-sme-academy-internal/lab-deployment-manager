@@ -39,6 +39,9 @@ curl -sSOL https://github.com/apigee-sme-academy-internal/lab-task-tracker/raw/m
 mv ./lab-bootstrap /usr/bin/
 chmod a+rx /usr/bin/lab-bootstrap
 
+lab-bootstrap begin overall-deployment "Overall deployment"
+
+
 lab-bootstrap begin student-account "Setting up student account"
 echo "*** Adding Student Account ${QWIKLABS_USERNAME} Home ***"
 mkhomedir_helper ${QWIKLABS_USERNAME}
@@ -144,3 +147,5 @@ lab-bootstrap end lab-dm
 
 
 unbuffer dm-startup.sh
+
+lab-bootstrap end overall-deployment
