@@ -80,7 +80,7 @@ chmod 0400 "$GOOGLE_APPLICATION_CREDENTIALS"
 
 
 echo "*** Installing GCP Logging Agent ***"
-lab-bootstrap begin cloud-logger "Setting up cloud logger"
+lab-bootstrap begin cloud-logger "Setting GCP logging agent"
 curl -sSO https://dl.google.com/cloudagents/add-logging-agent-repo.sh
 bash add-logging-agent-repo.sh
 apt-get update -y
@@ -90,7 +90,7 @@ lab-bootstrap end cloud-logger
 
 
 echo "*** Installing kubectl, git ***"
-lab-bootstrap begin base-tools "Installing kubectl, git"
+lab-bootstrap begin base-tools "Installing kubectl,git"
 snap install kubectl --classic
 export PATH=/snap/bin:$PATH
 apt-get install -y git
