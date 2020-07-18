@@ -50,7 +50,6 @@ function add_apigeelabs_dns_entry() {
   resource_type="$1"
   resource_name="$2"
   resource_value="$3"
-  access_token=$(gcloud auth print-access-token --account=${ASSETS_SERVICE_ACCOUNT})
   curl -s -X POST  'https://www.googleapis.com/dns/v1/projects/apigee-sme-academy/managedZones/apigeelabs/changes' \
     -H "Authorization: Bearer $(assets_access_token)" \
     -H 'Content-Type: application/json' \
