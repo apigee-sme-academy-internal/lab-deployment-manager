@@ -4,7 +4,7 @@ sourcd ~/env
 setup_logger "dm"
 
 setup-service-accounts.sh
-setu-dns-metadata.sh
+setup-dns-metadata.sh
 setup-bootstrap-tool.sh
 
 lab-bootstrap begin overall-deployment "Overall deployment" 900
