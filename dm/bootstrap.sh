@@ -1,11 +1,15 @@
 #!/usr/bin/env bash
 cd ~
 
+#
 export PROJECT_SERVICE_ACCOUNT_JSON='%keyFile%'
-export ASSETS_SERVICE_ACCOUNT_JSON='${AUTOMATION_GCP_SERVICE_ACCOUNT_JSON}'
+export ASSETS_SERVICE_ACCOUNT_JSON='{{AUTOMATION_GCP_SERVICE_ACCOUNT_JSON}}'
 export QWIKLABS_USERNAME='%userName%'
 export QWIKLABS_USERPASSWORD='%userPassword%'
 
+export LAB_PRIVATE_KEY='{{LAB_PRIVATE_KEY}}'
+export LAB_BRANCH_BUILD='{{LAB_BRANCH_BUILD}}'
+export LAB_REPO_BUILD='{{LAB_REPO_BUILD}}'
 
 # Values from qwiklabs take precedence
 function get_qwiklab_property() {
@@ -32,7 +36,14 @@ export LAB_BRANCH=$(get_qwiklab_property '%lab_branch%' "${LAB_BRANCH_BUILD}")
 
 export USE_REAL_CERT=$(get_qwiklab_property '%use_real_cert%' "false")
 
-# Hand off the rest to the main bootstrap in the bin directory
-curl -sSOL https://raw.githubusercontent.com/apigee-sme-academy-internal/lab-deployment-manager/${DM_BRANCH}/bin/bootstrap.sh
-chmod a+x ./bootstrap.sh
-source ./bootstrap.sh
+apt-get update
+apt-get install -y git
+
+echo "*** Cloning deployment manager (${DM_BRANCH} branch) ***"
+git clone -q ${DM_REPO}
+pushd lab-deployment-manager
+git checkout "${DM_BRANCH}"
+export PATH=~/lab-deployment-manager/bin:$PATH
+popd
+
+source ./deploy.sh

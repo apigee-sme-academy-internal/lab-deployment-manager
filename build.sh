@@ -28,7 +28,11 @@ fi
 
 export AUTOMATION_GCP_SERVICE_ACCOUNT_JSON=$(gcloud secrets versions access --secret=automation-gcp-service-account latest)
 
-envsubst '${LAB_REPO_BUILD},${LAB_BRANCH_BUILD},${LAB_PRIVATE_KEY},${AUTOMATION_GCP_SERVICE_ACCOUNT_JSON}' < ./build/dm/bootstrap.sh > ./build/dm/bootstrap.sh.temp
+cat ./build/dm/bootstrap.sh \
+   | perl -pe 's#\$#§#g' \
+   | perl -pe 's#\{\{([^}]+)\}\}#\${$1}#g' \
+   | envsubst \
+   | perl -pe 's#§#\$#g' > ./build/dm/bootstrap.sh.temp
 mv ./build/dm/bootstrap.sh.temp ./build/dm/bootstrap.sh
 
 zip -j build/${LAB_ZIP_FILE} ./build/dm/*
