@@ -6,7 +6,7 @@ cd ~
 echo "******************************"
 echo "*** (BEGIN) Lab repo setup ***"
 echo "******************************"
-lab-bootstrap begin lab-repo "Cloning lab repo"
+lab-bootstrap begin lab-repo "Cloning lab git repo" 10
 
 
 clone_repo_and_checkout_branch ${LAB_REPO} ${LAB_BRANCH}

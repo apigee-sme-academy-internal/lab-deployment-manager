@@ -6,7 +6,7 @@ setup_logger "setup-hybrid-player"
 echo "***********************************"
 echo "*** (BEGIN) Setup Hybrid Player ***"
 echo "***********************************"
-lab-bootstrap begin hybrid-player "Cloning hybrid player"
+lab-bootstrap begin hybrid-player "Cloning hybrid player git repo" 10
 
 
 cd ~

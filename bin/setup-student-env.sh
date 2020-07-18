@@ -6,7 +6,7 @@ source ~/env
 echo "*********************************"
 echo "*** (BEGIN) Setup Student Env ***"
 echo "*********************************"
-lab-bootstrap begin lab-student-env "Configuring student environment"
+lab-bootstrap begin lab-student-env "Configuring student environment" 10
 
 
 STUDENT_HOME="/home/${QWIKLABS_USERNAME}"

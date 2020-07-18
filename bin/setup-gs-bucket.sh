@@ -6,7 +6,7 @@ setup_logger "setup-gs-bucket"
 echo "*******************************************"
 echo "*** (BEGIN) Setting up GS Assets Bucket ***"
 echo "*******************************************"
-lab-bootstrap begin lab-gs "Configuring GS assets bucket"
+lab-bootstrap begin lab-gs "Configuring GS assets bucket" 10
 
 cd ~
 

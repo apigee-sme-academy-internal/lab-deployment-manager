@@ -6,7 +6,7 @@ source ~/env
 echo "********************************"
 echo "*** (BEGIN) Setup Assessment ***"
 echo "********************************"
-lab-bootstrap begin lab-at "Configuring activity tracking"
+lab-bootstrap begin lab-at "Configuring activity tracking" 10
 
 export STUDENT_HOME="/home/${QWIKLABS_USERNAME}"
 export ASSESSMENT_DIR="${STUDENT_HOME}/assessment"

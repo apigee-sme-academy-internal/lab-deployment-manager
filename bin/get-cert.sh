@@ -6,7 +6,7 @@ setup_logger "get-cert"
 echo "***********************************"
 echo "*** (BEGIN) Getting certificate ***"
 echo "***********************************"
-lab-bootstrap begin lab-certs "Creating certificates"
+lab-bootstrap begin lab-certs "Creating certificates" 180
 
 echo "Installing certbot-auto ..."
 wget https://dl.eff.org/certbot-auto

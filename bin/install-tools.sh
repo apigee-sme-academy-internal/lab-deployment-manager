@@ -7,7 +7,7 @@ setup_logger "install-tools"
 echo "********************************"
 echo "*** (BEGIN) Installing tools ***"
 echo "********************************"
-lab-bootstrap begin lab-tools "Installing node,java,mvn"
+lab-bootstrap begin lab-tools "Installing node,java,mvn" 30
 
 
 cd ~

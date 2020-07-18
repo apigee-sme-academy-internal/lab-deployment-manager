@@ -39,10 +39,10 @@ curl -sSOL https://github.com/apigee-sme-academy-internal/lab-task-tracker/raw/m
 mv ./lab-bootstrap /usr/bin/
 chmod a+rx /usr/bin/lab-bootstrap
 
-lab-bootstrap begin overall-deployment "Overall deployment"
+lab-bootstrap begin overall-deployment "Overall deployment" 900
 
 
-lab-bootstrap begin student-account "Setting up student account"
+lab-bootstrap begin student-account "Setting up student account" 10
 echo "*** Adding Student Account ${QWIKLABS_USERNAME} Home ***"
 mkhomedir_helper ${QWIKLABS_USERNAME}
 lab-bootstrap end student-account
@@ -80,7 +80,7 @@ chmod 0400 "$GOOGLE_APPLICATION_CREDENTIALS"
 
 
 echo "*** Installing GCP Logging Agent ***"
-lab-bootstrap begin cloud-logger "Setting GCP logging agent"
+lab-bootstrap begin cloud-logger "Setting up GCP logging agent" 30
 curl -sSO https://dl.google.com/cloudagents/add-logging-agent-repo.sh
 bash add-logging-agent-repo.sh
 apt-get update -y
@@ -90,7 +90,7 @@ lab-bootstrap end cloud-logger
 
 
 echo "*** Installing kubectl, git ***"
-lab-bootstrap begin base-tools "Installing kubectl,git"
+lab-bootstrap begin base-tools "Installing kubectl,git" 10
 snap install kubectl --classic
 export PATH=/snap/bin:$PATH
 apt-get install -y git
@@ -135,7 +135,7 @@ source ~/lab.env
 EOF
 
 echo "*** Cloning deployment manager (${DM_BRANCH} branch) ***"
-lab-bootstrap begin lab-dm "Cloning deployment manager"
+lab-bootstrap begin lab-dm "Cloning deployment manager git repo" 10
 git clone -q ${DM_REPO}
 pushd lab-deployment-manager
 git checkout ${DM_BRANCH}
