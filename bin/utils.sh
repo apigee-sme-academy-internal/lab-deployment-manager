@@ -33,13 +33,26 @@ function short_dig_apigeelabs() {
   fi
 }
 
+function assets_access_token() {
+
+  # looks like there is a big in gcloud where sometimes this command fails, so re-try until it succeeds
+  while true ; do
+    access_token_value="$(gcloud auth print-access-token --account="${ASSETS_SERVICE_ACCOUNT}" 2> /dev/null)"
+    access_token_exit_code="$?"
+    if [[ "${access_token_exit_code}" == "0" ]] ; then
+      echo "${access_token_value}"
+      break;
+    fi
+  done
+}
+
 function add_apigeelabs_dns_entry() {
   resource_type="$1"
   resource_name="$2"
   resource_value="$3"
   access_token=$(gcloud auth print-access-token --account=${ASSETS_SERVICE_ACCOUNT})
   curl -s -X POST  'https://www.googleapis.com/dns/v1/projects/apigee-sme-academy/managedZones/apigeelabs/changes' \
-    -H "Authorization: Bearer $access_token" \
+    -H "Authorization: Bearer $(assets_access_token)" \
     -H 'Content-Type: application/json' \
     -H 'Accept: application/json' \
     -d "$(cat << DNSEOF
@@ -163,11 +176,26 @@ function clone_repo_and_checkout_branch(){
 }
 
 
+
+
+function project_access_token() {
+  # looks like there is a big in gcloud where sometimes this command fails, so re-try until it succeeds
+  while true ; do
+    access_token_value="$(gcloud auth print-access-token --account="${PROJECT_SERVICE_ACCOUNT}" 2> /dev/null)"
+    access_token_exit_code="$?"
+    if [[ "${access_token_exit_code}" == "0" ]] ; then
+      echo "${access_token_value}"
+      break;
+    fi
+  done
+}
+
+
+
 function wait_for_apigee_config_api_ready() {
   org="$1"
   (
   setup_logger "poll"
-  access_token=$(gcloud auth print-access-token --account=${PROJECT_SERVICE_ACCOUNT})
   status_code=""
   attempts=0
   while [ -z "$status_code" ] || [ "$status_code" != "200" ]; do
@@ -176,7 +204,7 @@ function wait_for_apigee_config_api_ready() {
     status_code=$(curl -k -s -o /dev/null \
                       -w "%{http_code}" \
                       --max-time 5 \
-                      -H "Authorization: Bearer ${access_token}" \
+                      -H "Authorization: Bearer $(project_access_token)" \
                       -X GET "https://apigee.googleapis.com/v1/organizations/${org}/apiproducts" | head -1)
   done;
   echo "Got HTTP \"${status_code}\" from Apigee config API ..." && sleep 10;

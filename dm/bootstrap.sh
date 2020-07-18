@@ -49,7 +49,7 @@ checkout_branch "${DM_BRANCH}" "master"
 cat << EOF >> ~/env
 BASEDIR="\$( cd "\$( dirname "\${BASH_SOURCE[0]}" )" && pwd )"
 export HOME='${HOME}'
-export PATH="~/dm/bin:\$PATH"
+export PATH="${HOME}/dm/bin:\$PATH"
 
 export ZONE='${ZONE}'
 export REGION='${REGION}'
