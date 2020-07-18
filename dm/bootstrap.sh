@@ -47,7 +47,7 @@ source ./bin/utils.sh
 checkout_branch "${DM_BRANCH}" "master"
 
 cat << EOF >> ~/env
-BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+BASEDIR="\$( cd "\$( dirname "\${BASH_SOURCE[0]}" )" && pwd )"
 export HOME='${HOME}'
 export PATH="~/dm/bin:\$PATH"
 
