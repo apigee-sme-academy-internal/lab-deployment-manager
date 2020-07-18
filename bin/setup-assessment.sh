@@ -2,6 +2,7 @@
 
 cd ~
 source ~/env
+setup_logger "setup-assessment"
 
 echo "********************************"
 echo "*** (BEGIN) Setup Assessment ***"

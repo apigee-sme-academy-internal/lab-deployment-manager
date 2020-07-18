@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
 source ~/env
+setup_logger "setup-lab-repo"
+
 cd ~
 
 echo "******************************"
