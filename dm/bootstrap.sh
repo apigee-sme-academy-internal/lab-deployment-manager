@@ -27,7 +27,7 @@ function get_qwiklab_property() {
 export ZONE=$(get_qwiklab_property '%zone%' "us-west1-b")
 export REGION=$(get_qwiklab_property '%region%' "us-west1")
 
-export DM_REPO=$(get_qwiklab_property '%dm_repo%' "git@github.com:apigee-sme-academy-internal/lab-deployment-manager.git")
+export DM_REPO=$(get_qwiklab_property '%dm_repo%' "https://github.com/apigee-sme-academy-internal/lab-deployment-manager.git")
 export DM_BRANCH=$(get_qwiklab_property '%dm_branch%' "master")
 export ENV=$(get_qwiklab_property '%env%' "test")
 
