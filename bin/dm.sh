@@ -11,8 +11,6 @@ lab-bootstrap begin overall-deployment "Overall deployment" 900
 setup-student-home.sh
 setup-gcp-logging.sh
 setup-base-tools.sh
-setup-lab-key.sh
-setup-main-env.sh
 setup-cert.sh
 setup-lab-tools.sh
 setup-student-home.sh

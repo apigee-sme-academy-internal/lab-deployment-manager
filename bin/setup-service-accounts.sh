@@ -25,6 +25,18 @@ export ASSETS_SERVICE_ACCOUNT=$(gcloud config list account --format "value(core.
 # Make the project service account be the active one
 gcloud config set account ${PROJECT_SERVICE_ACCOUNT}
 
+
+
+
+
+cat << EOF >> ~/accounts.env
+export PROJECT='${PROJECT}'
+export PROJECT_SERVICE_ACCOUNT='${PROJECT_SERVICE_ACCOUNT}'
+export ASSETS_SERVICE_ACCOUNT='${ASSETS_SERVICE_ACCOUNT}'
+EOF
+
+echo "source ~/accounts.env" >> ~/env
+
 echo "*****************************************"
 echo "*** (END) Setting up service accounts ***"
 echo "*****************************************"

@@ -8,6 +8,9 @@ echo "*** (BEGIN) Lab repo setup ***"
 echo "******************************"
 lab-bootstrap begin lab-repo "Cloning lab git repo" 10
 
+echo '${LAB_PRIVATE_KEY}' > lab-key.pem
+chmod 600 ~/lab-key.pem
+export GIT_SSH_COMMAND="ssh -i ~/lab-key.pem"
 
 clone_repo_and_checkout_branch ${LAB_REPO} ${LAB_BRANCH}
 export LAB_DIR="$(pwd)/$(get_repo_dir ${LAB_REPO})"

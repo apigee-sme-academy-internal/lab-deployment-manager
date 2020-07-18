@@ -15,29 +15,26 @@ echo "*** Adding Student Account ${QWIKLABS_USERNAME} Home ***"
 mkhomedir_helper ${QWIKLABS_USERNAME}
 
 
-STUDENT_HOME="/home/${QWIKLABS_USERNAME}"
+export STUDENT_HOME="/home/${QWIKLABS_USERNAME}"
 
 cat << EOF >> "${STUDENT_HOME}/lab.env"
-
 export PATH="/snap/bin:\$PATH"
-
-export PROJECT=\$(gcloud config get-value project)
-
-export ZONE=\$(gcloud compute project-info describe --format="json" |
-              jq -r  '.commonInstanceMetadata.items[]  |
-              select(.key == "google-compute-default-zone") |
-              .value')
-
+export PROJECT='${PROJECT}'
+export ZONE='${ZONE}'
 export ENV="test"
-
 export ACCESS_TOKEN=\$(gcloud auth print-access-token)
-
 EOF
 
 chown "${QWIKLABS_USERNAME}:ubuntu" "${STUDENT_HOME}/lab.env"
 
 export HOME=${STUDENT_HOME}
 sudo -u $QWIKLABS_USERNAME -E bash -c 'gcloud auth activate-service-account --key-file=<(echo ${PROJECT_SERVICE_ACCOUNT_JSON})'
+
+
+cat << EOF >> ~/student.env
+export STUDENT_HOME='${STUDENT_HOME}'
+EOF
+echo "source ~/student.env" >> ~/env
 
 
 lab-bootstrap end student-account
