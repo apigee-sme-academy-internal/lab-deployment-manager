@@ -10,9 +10,7 @@ echo "*** (BEGIN) Creating environment files ***"
 echo "******************************************"
 
 cat << EOF >> ~/env
-export HOME=/root
-export PATH="${HOME}/lab-deployment-manager/bin:/snap/bin:\$PATH"
-source utils.sh
+export PATH="$PATH:/snap/bin:\$PATH"
 
 LAB_REPO='${LAB_REPO}'
 LAB_BRANCH='${LAB_BRANCH}'

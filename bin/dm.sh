@@ -1,9 +1,6 @@
 #!/usr/bin/env bash
 
-cd ~
-
-export HOME=/root
-source utils.sh
+sourcd ~/env
 setup_logger "dm"
 
 setup-service-accounts.sh
@@ -13,7 +10,7 @@ lab-bootstrap begin overall-deployment "Overall deployment" 900
 
 setup-student-home.sh
 setup-gcp-logging.sh
-install-bootstrap-tools.sh
+install-base-tools.sh
 setup-lab-key.sh
 setup-main-env.sh
 get-cert.sh

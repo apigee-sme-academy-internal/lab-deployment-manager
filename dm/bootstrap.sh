@@ -36,14 +36,21 @@ export LAB_BRANCH=$(get_qwiklab_property '%lab_branch%' "${LAB_BRANCH_BUILD}")
 
 export USE_REAL_CERT=$(get_qwiklab_property '%use_real_cert%' "false")
 
+export HOME=/root
 apt-get update
 apt-get install -y git
 
 echo "*** Cloning deployment manager (${DM_BRANCH} branch) ***"
-git clone -q ${DM_REPO}
-pushd lab-deployment-manager
+mkdir -p ~/dm && cd ~/dm
+git clone -q ${DM_REPO} .
 git checkout "${DM_BRANCH}"
-export PATH=~/lab-deployment-manager/bin:$PATH
-popd
 
-source ./deploy.sh
+cat << EOF >> ~/env
+export HOME='${HOME}'
+export PATH="~/dm/bin:\$PATH"
+source utils.sh
+
+EOF
+
+source ~/env
+dm.sh
