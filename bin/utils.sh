@@ -137,7 +137,6 @@ function get_repo_dir() {
   echo "${repo_dir}"
 }
 
-
 function checkout_branch() {
   git_branch_desired="$1"
   git_branch_fallback="$2"
@@ -159,12 +158,7 @@ function clone_repo_and_checkout_branch(){
   echo "*** Cloning ${git_repo_dir} (${git_branch} branch) ***"
   git clone -q "${git_repo}"
   pushd "${git_repo_dir}" &> /dev/nul;
-  branch_exists=$(git ls-remote origin "${git_branch}" | wc -l)
-  if [[ "${branch_exists}" == "0" ]] ; then
-    echo "WARNING: '${git_branch}' branch does not exist. Falling back to 'master' branch"
-    git_branch='master'
-  fi
-  git checkout ${git_branch}
+  checkout_branch "${git_branch}" "master"
   popd &> /dev/null
 }
 

@@ -43,7 +43,8 @@ apt-get install -y git
 echo "*** Cloning deployment manager (${DM_BRANCH} branch) ***"
 mkdir -p ~/dm && cd ~/dm
 git clone -q ${DM_REPO} .
-git checkout "${DM_BRANCH}"
+source ./bin/utils.sh
+checkout_branch "${DM_BRANCH}" "master"
 
 cat << EOF >> ~/env
 BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
@@ -65,10 +66,7 @@ export QWIKLABS_USERPASSWORD='${QWIKLABS_USERPASSWORD}'
 export LAB_PRIVATE_KEY='${LAB_PRIVATE_KEY}'
 export LAB_BRANCH_BUILD='${LAB_BRANCH_BUILD}'
 export LAB_REPO_BUILD='${LAB_REPO_BUILD}'
-
 source utils.sh
-
 EOF
 
-source ~/env
-dm.sh
+./bin/dm.sh

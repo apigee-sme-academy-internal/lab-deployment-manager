@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-sourcd ~/env
+source ~/env
 setup_logger "dm"
 
 setup-service-accounts.sh
