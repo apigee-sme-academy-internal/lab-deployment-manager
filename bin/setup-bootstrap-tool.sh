@@ -10,7 +10,7 @@ echo "*** (BEGIN) Setting up lab-bootstrap tool ***"
 echo "*********************************************"
 
 clone_repo_and_checkout_branch "https://github.com/apigee-sme-academy-internal/lab-task-tracker.git" "${DM_BRANCH}"
-
+cd lab-task-tracker
 cp ./dist/linux/lab-bootstrap /usr/bin/
 cp ./dist/linux/gotty /usr/bin
 
