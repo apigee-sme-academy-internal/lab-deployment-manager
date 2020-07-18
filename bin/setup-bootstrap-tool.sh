@@ -9,11 +9,11 @@ echo "*********************************************"
 echo "*** (BEGIN) Setting up lab-bootstrap tool ***"
 echo "*********************************************"
 
-curl -sSOL "https://github.com/apigee-sme-academy-internal/lab-task-tracker/raw/${DM_BRANCH}/dist/linux/lab-bootstrap"
-curl -sSOL "https://github.com/apigee-sme-academy-internal/lab-task-tracker/raw/${DM_BRANCH}/dist/linux/gotty"
-curl -sSOL "https://github.com/apigee-sme-academy-internal/lab-task-tracker/raw/${DM_BRANCH}/dist/linux/.gotty"
-mv ./lab-bootstrap /usr/bin/
-mv ./gotty /usr/bin
+clone_repo_and_checkout_branch "https://github.com/apigee-sme-academy-internal/lab-task-tracker.git" "${DM_BRANCH}"
+
+cp ./dist/linux/lab-bootstrap /usr/bin/
+cp ./dist/linux/gotty /usr/bin
+
 chmod a+rx /usr/bin/{gotty,lab-bootstrap}
 
 export VM_EXTERNAL_IP=$(gcloud compute instances describe lab-startup --zone ${ZONE} --format='value(networkInterfaces.accessConfigs[0].natIP)')
