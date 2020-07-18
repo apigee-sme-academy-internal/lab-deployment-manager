@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
 source ~/env
-setup_logger "get-cert"
+setup_logger "setup-cert"
 
 echo "***********************************"
 echo "*** (BEGIN) Getting certificate ***"
 echo "***********************************"
-lab-bootstrap begin lab-certs "Creating certificates" 180
+lab-bootstrap begin setup-certs "Setting up certificates" 180
 
 echo "Installing certbot-auto ..."
 wget https://dl.eff.org/certbot-auto
@@ -52,7 +52,7 @@ yes | certbot-auto certonly \
   --non-interactive \
   $TEST_CERT_FLAG \
   --preferred-challenges dns-01 \
-  --manual-auth-hook $(which auth-hook.sh) \
+  --manual-auth-hook "${BASEDIR}/auth-hook.sh" \
   --agree-tos \
   --manual-public-ip-logging-ok \
   --email "$QWIKLABS_USERNAME@qwiklabs.net" \
@@ -90,7 +90,7 @@ fi
 
 echo "source ~/certs.env" >> ~/env
 
-lab-bootstrap end lab-certs
+lab-bootstrap end setup-certs
 
 echo "*********************************"
 echo "*** (END) Getting certificate ***"

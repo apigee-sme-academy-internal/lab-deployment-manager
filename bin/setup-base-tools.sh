@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 source ~/env
-setup_logger "install-bootstrap-tools"
+setup_logger "setup-base-tools"
 
 cd ~
 
@@ -14,7 +14,7 @@ apt-get install expect -y
 snap install kubectl --classic
 snap install jq
 
-lab-bootstrap end bootstrap-tools
+lab-bootstrap end base-tools
 echo "***********************************"
 echo "*** (END) Installing base tools ***"
 echo "***********************************"

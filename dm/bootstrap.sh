@@ -46,6 +46,7 @@ git clone -q ${DM_REPO} .
 git checkout "${DM_BRANCH}"
 
 cat << EOF >> ~/env
+BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 export HOME='${HOME}'
 export PATH="~/dm/bin:\$PATH"
 source utils.sh

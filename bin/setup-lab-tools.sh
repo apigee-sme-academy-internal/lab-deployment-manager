@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 source ~/env
-setup_logger "install-lab-tools"
+setup_logger "setup-lab-tools"
 
 
 echo "********************************"
