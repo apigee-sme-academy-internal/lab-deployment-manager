@@ -11,7 +11,7 @@ lab-bootstrap begin hybrid-player "Cloning hybrid player git repo" 10
 
 cd ~
 
-export HYBRID_PLAYER_REPO='git@github.com:apigee-sme-academy-internal/qwiklabs-hybrid-player.git'
+export HYBRID_PLAYER_REPO='https://github.com/apigee-sme-academy-internal/qwiklabs-hybrid-player.git'
 clone_repo_and_checkout_branch ${HYBRID_PLAYER_REPO} ${DM_BRANCH}
 
 export HYBRID_PLAYER_DIR="$(pwd)/$(get_repo_dir ${HYBRID_PLAYER_REPO})"
