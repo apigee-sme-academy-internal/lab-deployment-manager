@@ -1,16 +1,14 @@
 #!/usr/bin/env bash
-set -e
-
 source ~/env
-setup_logger "setup-student-home"
+
+task_id="setup-student-home"
+begin_task "${task_id}" "Setting up student account" 10
 
 cd ~
-
 
 echo "******************************************"
 echo "*** (BEGIN) Setting up student account ***"
 echo "******************************************"
-lab-bootstrap begin student-account "Setting up student account" 10
 
 echo "*** Adding Student Account ${QWIKLABS_USERNAME} Home ***"
 mkhomedir_helper ${QWIKLABS_USERNAME}
@@ -38,7 +36,7 @@ EOF
 echo "source ~/student.env" >> ~/env
 
 
-lab-bootstrap end student-account
+end_task "${task_id}"
 echo "****************************************"
 echo "*** (END) Setting up student account ***"
 echo "****************************************"

@@ -1,21 +1,20 @@
 #!/usr/bin/env bash
-set -e
-
 source ~/env
-setup_logger "setup-base-tools"
+
+task_id="setup-base-tools"
+begin_task "${task_id}" "Installing base tools" 30
 
 cd ~
 
 echo "*************************************"
 echo "*** (BEGIN) Installing base tools ***"
 echo "*************************************"
-lab-bootstrap begin base-tools "Installing base tools" 30
 
 apt-get install expect -y
 snap install kubectl --classic
 snap install jq
 
-lab-bootstrap end base-tools
+end_task "${task_id}"
 echo "***********************************"
 echo "*** (END) Installing base tools ***"
 echo "***********************************"

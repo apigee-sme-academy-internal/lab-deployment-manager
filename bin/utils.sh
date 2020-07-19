@@ -228,3 +228,53 @@ function wait_for_devportal_apidocs_api_ready() {
   )
 }
 
+function error_handler() {
+  program="$0"
+  line_num="$1"
+  exit_code="$2"
+  task_id="$3"
+  if [[ "${exit_code}" == "0" ]] ; then
+    exit ${exit_code}
+  fi
+
+  echo "${program}: line ${line_num}: exit status of last command: ${exit_code}"
+  fail_task "${task_id}"
+  exit ${exit_code}
+}
+
+export -f error_handler
+function setup_error_handler() {
+  set -e
+  TASK_ID="$1"
+  trap 'error_handler ${LINENO} $? '"$TASK_ID" EXIT
+}
+
+
+
+begin_task() {
+  task_id="$1"
+  task_name="$2"
+  task_eta="$3"
+  setup_logger "${task_id}"
+  setup_error_handler "${task_id}"
+
+  if command -v lab-bootstrap &> /dev/null  ; then
+    lab-bootstrap begin "${task_id}" "${task_name}" "${task_eta}"
+  fi
+}
+
+end_task() {
+  task_id="$1"
+
+  if command -v lab-bootstrap &> /dev/null  ; then
+    lab-bootstrap end "${task_id}"
+  fi
+}
+
+fail_task() {
+  task_id="$1"
+
+  if command -v lab-bootstrap &> /dev/null  ; then
+    lab-bootstrap fail "${task_id}"
+  fi
+}

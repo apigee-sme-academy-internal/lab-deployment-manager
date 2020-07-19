@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
-set -e
-
 source ~/env
-setup_logger "setup-gcp-logging"
+
+task_id="setup-gcp-logging"
+begin_task "${task_id}" "Setting up GCP logging agent" 30
+
 
 cd ~
 
 echo "********************************************"
 echo "*** (BEGIN) Installing GCP Logging Agent ***"
 echo "********************************************"
-lab-bootstrap begin cloud-logger "Setting up GCP logging agent" 30
 
 GOOGLE_APPLICATION_CREDENTIALS="/etc/google/auth/application_default_credentials.json"
 mkdir -p $(dirname ${GOOGLE_APPLICATION_CREDENTIALS})
@@ -23,7 +23,7 @@ apt-get update -y
 apt-get install -y google-fluentd google-fluentd-catch-all-config-structured
 service google-fluentd start
 
-lab-bootstrap end cloud-logger
+end_task "${task_id}"
 echo "******************************************"
 echo "*** (END) Installing GCP Logging Agent ***"
 echo "******************************************"

@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
-set -e
+source ~/env
+
+task_id="setup-assessment"
+begin_task "${task_id}" "Configuring activity tracking" 10
 
 cd ~
-source ~/env
-setup_logger "setup-assessment"
 
 echo "********************************"
 echo "*** (BEGIN) Setup Assessment ***"
 echo "********************************"
-lab-bootstrap begin lab-at "Configuring activity tracking" 10
 
 export STUDENT_HOME="/home/${QWIKLABS_USERNAME}"
 export ASSESSMENT_DIR="${STUDENT_HOME}/assessment"
@@ -35,7 +35,7 @@ chown -R "${QWIKLABS_USERNAME}:ubuntu" "${ASSESSMENT_DIR}"
 # Make shell scripts executable
 find "${ASSESSMENT_DIR}" -name "*.sh" -exec chmod a+x {} \;
 
-lab-bootstrap end lab-at
+end_task "${task_id}"
 echo "******************************"
 echo "*** (END) Setup Assessment ***"
 echo "******************************"

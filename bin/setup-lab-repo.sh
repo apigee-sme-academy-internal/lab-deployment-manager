@@ -1,15 +1,14 @@
 #!/usr/bin/env bash
-set -e
-
 source ~/env
-setup_logger "setup-lab-repo"
+
+task_id="setup-lab-repo"
+begin_task "${task_id}" "Cloning lab git repo" 10
 
 cd ~
 
 echo "******************************"
 echo "*** (BEGIN) Lab repo setup ***"
 echo "******************************"
-lab-bootstrap begin lab-repo "Cloning lab git repo" 10
 
 echo '${LAB_PRIVATE_KEY}' > lab-key.pem
 chmod 600 ~/lab-key.pem
@@ -24,7 +23,7 @@ EOF
 
 echo "source ~/lab.env" >> ~/env
 
-lab-bootstrap end lab-repo
+end_task "${task_id}"
 echo "****************************"
 echo "*** (END) Lab repo setup ***"
 echo "****************************"

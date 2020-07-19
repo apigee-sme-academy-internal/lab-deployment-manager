@@ -1,15 +1,16 @@
 #!/usr/bin/env bash
-set -e
-
 source ~/env
-setup_logger "setup-gs-bucket"
+
+task_id="setup-gs-bucket"
+begin_task "${task_id}" "Configuring GS assets bucket" 10
+
+cd ~
 
 echo "*******************************************"
 echo "*** (BEGIN) Setting up GS Assets Bucket ***"
 echo "*******************************************"
-lab-bootstrap begin lab-gs "Configuring GS assets bucket" 10
 
-cd ~
+
 
 echo "*** Setup lab assets storage bucket ***"
 
@@ -58,7 +59,7 @@ CORSHEREDOC
 
 gsutil cors set bucket-cors.json gs://${PROJECT}
 
-lab-bootstrap end lab-gs
+end_task "${task_id}"
 echo "*****************************************"
 echo "*** (END) Setting up GS Assets Bucket ***"
 echo "*****************************************"

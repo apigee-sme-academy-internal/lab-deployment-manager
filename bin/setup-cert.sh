@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
-set -e
-
 source ~/env
-setup_logger "setup-cert"
+
+task_id="setup-cert"
+begin_task "${task_id}" "Setting up certificates" 180
+
 
 echo "***********************************"
 echo "*** (BEGIN) Getting certificate ***"
 echo "***********************************"
-lab-bootstrap begin setup-certs "Setting up certificates" 180
 
 echo "Installing certbot-auto ..."
 wget https://dl.eff.org/certbot-auto
@@ -91,7 +91,7 @@ fi
 
 echo "source ~/certs.env" >> ~/env
 
-lab-bootstrap end setup-certs
+end_task "${task_id}"
 
 echo "*********************************"
 echo "*** (END) Getting certificate ***"

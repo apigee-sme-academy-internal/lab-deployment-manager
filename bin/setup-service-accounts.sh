@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
-set -e
-
 source ~/env
-setup_logger "setup-service-accounts"
+
+task_id="setup-service-accounts"
+setup_logger "${task_id}"
+setup_error_handler "${task_id}"
 
 cd ~
 

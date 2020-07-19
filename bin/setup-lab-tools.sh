@@ -1,17 +1,15 @@
 #!/usr/bin/env bash
-set -e
-
 source ~/env
-setup_logger "setup-lab-tools"
 
+task_id="setup-lab-tools"
+begin_task "${task_id}" "Installing lab tools" 30
+
+cd ~
 
 echo "********************************"
 echo "*** (BEGIN) Installing tools ***"
 echo "********************************"
-lab-bootstrap begin lab-tools "Installing lab tools" 30
 
-
-cd ~
 
 echo "*** Installing xml tools ***"
 apt-get install -y libxml2-utils xmlformat-perl
@@ -57,7 +55,7 @@ EOF
 
 echo "source ~/tools.env" >> ~/env
 
-lab-bootstrap end lab-tools
+end_task "${task_id}"
 echo "********************************"
 echo "*** (END) Installing tools ***"
 echo "********************************"

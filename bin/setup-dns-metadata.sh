@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
-set -e
+source ~/env
+
+task_id="setup-dns-metadata"
+setup_logger "${task_id}"
+setup_error_handler "${task_id}"
 
 cd ~
-source ~/env
-setup_logger "setup-dns-metadata"
 
 echo "**********************************"
 echo "*** (BEGIN) Setup DNS Metadata ***"

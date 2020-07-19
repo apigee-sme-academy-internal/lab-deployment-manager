@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
-set -e
-
 source ~/env
-setup_logger "setup-bootstrap-tool"
+
+task_id="setup-bootstrap-tool"
+setup_logger "${task_id}"
+setup_error_handler "${task_id}"
+
 
 cd ~
 
