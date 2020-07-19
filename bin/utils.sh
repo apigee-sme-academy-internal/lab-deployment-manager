@@ -35,10 +35,12 @@ function short_dig_apigeelabs() {
 
 function assets_access_token() {
 
-  # looks like there is a big in gcloud where sometimes this command fails, so re-try until it succeeds
+  #sometimes getting access token fails, so re-try until it succeeds
   while true ; do
+    set +e
     access_token_value="$(gcloud auth print-access-token --account="${ASSETS_SERVICE_ACCOUNT}" 2> /dev/null)"
     access_token_exit_code="$?"
+    set -e
     if [[ "${access_token_exit_code}" == "0" ]] ; then
       echo "${access_token_value}"
       break;
@@ -252,7 +254,7 @@ function setup_error_handler() {
 
 
 
-begin_task() {
+function begin_task() {
   task_id="$1"
   task_name="$2"
   task_eta="$3"
@@ -264,7 +266,7 @@ begin_task() {
   fi
 }
 
-end_task() {
+function end_task() {
   task_id="$1"
 
   if command -v lab-bootstrap &> /dev/null  ; then
@@ -272,10 +274,28 @@ end_task() {
   fi
 }
 
-fail_task() {
+function fail_task() {
   task_id="$1"
 
   if command -v lab-bootstrap &> /dev/null  ; then
     lab-bootstrap fail "${task_id}"
   fi
+}
+
+
+function activate_service_account() {
+  service_account_json="$1"
+
+  # sometimes service account activation fails, so retry
+  while true ; do
+    set +e
+    gcloud auth activate-service-account --key-file=<(echo "${service_account_json}")
+    exit_code="$?"
+    set -e
+
+    if [[ "${exit_code}" == "0" ]] ; then
+      break;
+    fi
+  done
+
 }
