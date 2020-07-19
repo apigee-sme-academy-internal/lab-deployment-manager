@@ -168,15 +168,30 @@ function clone_repo_and_checkout_branch(){
   git_repo="$1"
   git_branch="$2"
   git_depth="${3:-1}"
+  git_branch_fallback="${4:-master}"
   git_repo_dir="$(get_repo_dir ${git_repo})"
 
   echo "*** Cloning ${git_repo_dir} (${git_branch} branch) ***"
-  git clone -q --depth "${git_depth}" "${git_repo}"
-  pushd "${git_repo_dir}" &> /dev/nul;
-  checkout_branch "${git_branch}" "master"
-  popd &> /dev/null
-}
+  set +e
+  git clone --single-branch --branch "${git_branch}" -q --depth "${git_depth}" "${git_repo}"
+  git_clone_exit_code="$?"
+  set -e
+  if [[ "${git_clone_exit_code}" == "0" ]] ; then
+    return 0
+  fi
 
+  echo "WARNING: Could not clone ${git_repo_dir} (${git_branch}), falling back to '${git_branch_fallback}'"
+  git_branch="${git_branch_fallback}"
+  echo "*** Cloning ${git_repo_dir} (${git_branch} branch) ***"
+  set +e
+  git clone --single-branch --branch "${git_branch}" -q --depth "${git_depth}" "${git_repo}"
+  git_clone_exit_code="$?"
+  set -e
+  if [[ "${git_clone_exit_code}" != "0" ]] ; then
+    echo "ERROR: Could not clone ${git_repo_dir} (${git_branch})"
+    return 1
+  fi
+}
 
 
 
