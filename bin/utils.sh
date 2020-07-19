@@ -165,10 +165,11 @@ function checkout_branch() {
 function clone_repo_and_checkout_branch(){
   git_repo="$1"
   git_branch="$2"
+  git_depth="${3:-1}"
   git_repo_dir="$(get_repo_dir ${git_repo})"
 
   echo "*** Cloning ${git_repo_dir} (${git_branch} branch) ***"
-  git clone -q "${git_repo}"
+  git clone -q --depth "${git_depth}" "${git_repo}"
   pushd "${git_repo_dir}" &> /dev/nul;
   checkout_branch "${git_branch}" "master"
   popd &> /dev/null
