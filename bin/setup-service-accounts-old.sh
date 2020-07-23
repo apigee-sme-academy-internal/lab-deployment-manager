@@ -15,8 +15,6 @@ echo "*******************************************"
 snap install google-cloud-sdk
 export PATH=/snap/bin:$PATH
 
-export ASSETS_SERVICE_ACCOUNT_JSON=$(curl -sSL https://storage.googleapis.com/apigee-sme-academy/automation-gcp-service-account.json)
-
 # Save the project svc account name
 activate_service_account "${PROJECT_SERVICE_ACCOUNT_JSON}"
 export PROJECT_SERVICE_ACCOUNT=$(gcloud config list account --format "value(core.account)")
@@ -31,12 +29,12 @@ gcloud config set account "${PROJECT_SERVICE_ACCOUNT}"
 
 
 
+
+
 cat << EOF >> ~/accounts.env
 export PROJECT='${PROJECT}'
 export PROJECT_SERVICE_ACCOUNT='${PROJECT_SERVICE_ACCOUNT}'
 export ASSETS_SERVICE_ACCOUNT='${ASSETS_SERVICE_ACCOUNT}'
-
-export ASSETS_SERVICE_ACCOUNT_JSON='${ASSETS_SERVICE_ACCOUNT_JSON}'
 EOF
 
 echo "source ~/accounts.env" >> ~/env
