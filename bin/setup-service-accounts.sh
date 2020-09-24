@@ -16,7 +16,7 @@ snap install google-cloud-sdk
 export PATH=/snap/bin:$PATH
 
 export KEY_PASS="${KEY_PASS:-Apigee123}"
-export ASSETS_SERVICE_ACCOUNT_JSON=$(openssl enc -aes-256-cbc -d -in <(gsutil cat gs://apigee-sme-academy/automation-svc.json.enc) -pass "pass:${KEY_PASS}")
+export ASSETS_SERVICE_ACCOUNT_JSON=$(openssl enc -aes-256-cbc -d -md sha256 -in <(gsutil cat gs://apigee-sme-academy/automation-svc.json.enc) -pass "pass:${KEY_PASS}")
 
 # Save the project svc account name
 activate_service_account "${PROJECT_SERVICE_ACCOUNT_JSON}"
