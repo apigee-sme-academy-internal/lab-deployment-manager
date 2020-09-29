@@ -3,7 +3,6 @@ cd ~
 
 #
 export PROJECT_SERVICE_ACCOUNT_JSON='%keyFile%'
-export ASSETS_SERVICE_ACCOUNT_JSON='{{AUTOMATION_GCP_SERVICE_ACCOUNT_JSON}}'
 export QWIKLABS_USERNAME='%userName%'
 export QWIKLABS_USERPASSWORD='%userPassword%'
 
@@ -36,6 +35,9 @@ export LAB_BRANCH=$(get_qwiklab_property '%lab_branch%' "${LAB_BRANCH_BUILD}")
 
 export USE_REAL_CERT=$(get_qwiklab_property '%use_real_cert%' "false")
 
+export KEY_PASS=$(get_qwiklab_property '%key_pass%' "")
+
+
 export HOME=/root
 apt-get update
 apt-get install -y git
@@ -60,12 +62,12 @@ export LAB_REPO='${LAB_REPO}'
 export LAB_BRANCH='${LAB_BRANCH}'
 export USE_REAL_CERT='${USE_REAL_CERT}'
 export PROJECT_SERVICE_ACCOUNT_JSON='${PROJECT_SERVICE_ACCOUNT_JSON}'
-export ASSETS_SERVICE_ACCOUNT_JSON='${ASSETS_SERVICE_ACCOUNT_JSON}'
 export QWIKLABS_USERNAME='${QWIKLABS_USERNAME}'
 export QWIKLABS_USERPASSWORD='${QWIKLABS_USERPASSWORD}'
 export LAB_PRIVATE_KEY='${LAB_PRIVATE_KEY}'
 export LAB_BRANCH_BUILD='${LAB_BRANCH_BUILD}'
 export LAB_REPO_BUILD='${LAB_REPO_BUILD}'
+export KEY_PASS='${KEY_PASS}'
 source utils.sh
 EOF
 

@@ -18,6 +18,7 @@ resources:
              replace('%lab_branch%', properties["lab_branch"]) |
              replace('%lab_repo%', properties["lab_repo"]) |
              replace('%use_real_cert%', properties["use_real_cert"]) |
+             replace('%key_pass%', properties["key_pass"]) |
              replace('%env%', properties["env"]) |
              indent(10) }}
     disks:
